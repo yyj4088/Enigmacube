@@ -1,0 +1,24 @@
+{
+  "name": "rpg",
+  "version": "1.0.0",
+  "description": "game editor",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt nodeunit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pasquelin/rpg.git"
+  },
+  "keywords": [
+    "rpg",
+    "game",
+    "editor"
+  ],
+  "author": "Pasquelin Alban",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pasquelin/rpg/issues"
+  },
+  "homepage": "https://github.com/pasquelin/rpg#readme"
+}
