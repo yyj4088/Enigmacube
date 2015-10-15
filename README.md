@@ -1,2 +1,3 @@
-# rpg
-game editor node
+# server
+
+a [Sails](http://sailsjs.org) application
