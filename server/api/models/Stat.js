@@ -9,6 +9,10 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true
         },
+        title: {
+            type: 'string',
+            size: 50
+        },
         content: {
             type: 'json'
         },

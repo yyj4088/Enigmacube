@@ -8,8 +8,7 @@ var User = {
         },
         email: {
             type: 'email',
-            unique: true,
-            email: true
+            unique: true
         },
         passports: {
             collection: 'Passport',

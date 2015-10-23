@@ -17,20 +17,20 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ zone.name }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ stat.name }}" required>
                         </div>
                         <div class="form-group">
                             <label for="comment">Comment</label>
-                            <textarea class="form-control" id="comment" name="comment" rows="3">{{ zone.comment }}</textarea>
+                            <textarea class="form-control" id="comment" name="comment" rows="3">{{ stat.comment }}</textarea>
                         </div>
                     </div>
                     <div class="col-md-4">.col-md-4</div>
                 </div>
 
-                {% if zone.id %}
+                {% if stat.id %}
                     <div class="form-group">
                         <label for="id">ID</label>
-                        <input type="number" class="form-control" id="id" name="id" value="{{ zone.id }}" disabled>
+                        <input type="number" class="form-control" id="id" name="id" value="{{ stat.id }}" disabled>
                     </div>
                 {% endif %}
 
@@ -72,7 +72,7 @@
                 </div>
                 <div class="form-group">
                     <label for="backgroundColor">Background color</label>
-                    <input type="text" class="form-control" id="backgroundColor" name="backgroundColor" value="{{ zone.backgroundColor }}">
+                    <input type="text" class="form-control" id="backgroundColor" name="backgroundColor" value="{{ stat.backgroundColor }}">
                 </div>
                 <div class="form-group">
                     <label for="degradation">Dégradation</label>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="form-group">
                     <label for="script">Script</label>
-                    <textarea class="form-control" id="script" name="script" rows="3">{{ zone.script }}</textarea>
+                    <textarea class="form-control" id="script" name="script" rows="3">{{ stat.script }}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="skybox">skybox</label>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="form-group">
                     <label for="ambiance">ambiance</label>
-                    <input type="text" class="form-control" id="ambiance" name="ambiance" value="{{ zone.ambiance }}">
+                    <input type="text" class="form-control" id="ambiance" name="ambiance" value="{{ stat.ambiance }}">
                 </div>
                 <div class="form-group">
                     <label for="sun">Soleil</label>

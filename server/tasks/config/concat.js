@@ -11,8 +11,10 @@
  * 		https://github.com/gruntjs/grunt-contrib-concat
  */
 module.exports = function(grunt) {
-
 	grunt.config.set('concat', {
+		options: {
+			separator: "\n",
+		},
 		js: {
 			src: require('../pipeline').jsFilesToInject,
 			dest: '.tmp/public/concat/production.js'

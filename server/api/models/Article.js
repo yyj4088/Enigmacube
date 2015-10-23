@@ -11,12 +11,9 @@ module.exports = {
         },
         title: {
             type: 'string',
-            size: 50
+            size: 255
         },
         content: {
-            type: 'text'
-        },
-        response: {
             type: 'text'
         },
         status: {

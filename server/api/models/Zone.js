@@ -28,18 +28,9 @@ module.exports = {
             type: 'integer',
             index: true
         },
-        parent: {
-            model: 'zone'
-        },
         audio: {
             type: 'string',
             size: 255
-        },
-        botMoneyMin: {
-            type: 'integer'
-        },
-        botMoneyMax: {
-            type: 'integer'
         },
         background: {
             type: 'string',

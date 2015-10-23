@@ -13,6 +13,9 @@ module.exports = {
             type: 'string',
             size: 255
         },
+        comment: {
+            type: 'text'
+        },
         type: {
             type: 'integer'
         },

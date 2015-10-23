@@ -13,100 +13,38 @@
         <div class="col-md-12">
             <form action="{{ action }}" method="post">
 
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ zone.name }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="comment">Comment</label>
-                            <textarea class="form-control" id="comment" name="comment" rows="3">{{ zone.comment }}</textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-4">.col-md-4</div>
-                </div>
-
-                {% if zone.id %}
+                {% if article.id %}
                     <div class="form-group">
                         <label for="id">ID</label>
-                        <input type="number" class="form-control" id="id" name="id" value="{{ zone.id }}" disabled>
+                        <input type="number" class="form-control" id="id" name="id" value="{{ article.id }}" disabled>
                     </div>
                 {% endif %}
 
                 <div class="form-group">
-                    <label for="x">X</label>
-                    <select class="form-control" id="x" name="x">
-                        {% for i in range(1, 100) %}
-                            <option>{{ i }}</option>
-                        {% endfor %}
+                    <label for="title">Titre</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ article.title }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">content</label>
+                    <textarea class="form-control" id="content" name="content" rows="3">{{ article.content }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Actif</label>
+                    <select class="form-control" id="status" name="status">
+                        <option value="1">Oui</option>
+                        <option value="0">Non</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="y">Y</label>
-                    <select class="form-control" id="y" name="y">
-                        {% for i in range(1, 100) %}
-                            <option>{{ i }}</option>
-                        {% endfor %}
+                    <label for="zone">Zone</label>
+                    <select class="form-control" id="zone" name="zone">
+                        <option value="0">Aucune</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="z">Z</label>
-                    <select class="form-control" id="z" name="z">
-                        {% for i in range(1, 100) %}
-                            <option>{{ i }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="audio">Audio</label>
-                    <select class="form-control" id="audio" name="audio">
-                        <option value="">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="background">Background</label>
-                    <select class="form-control" id="background" name="background">
-                        <option value="">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="backgroundColor">Background color</label>
-                    <input type="text" class="form-control" id="backgroundColor" name="backgroundColor" value="{{ zone.backgroundColor }}">
-                </div>
-                <div class="form-group">
-                    <label for="degradation">Dégradation</label>
-                    <select class="form-control" id="degradation" name="degradation">
-                        <option value="0">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="frequency">Fréquence</label>
-                    <select class="form-control" id="frequency" name="frequency">
-                        <option value="0">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="script">Script</label>
-                    <textarea class="form-control" id="script" name="script" rows="3">{{ zone.script }}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="skybox">skybox</label>
-                    <select class="form-control" id="skybox" name="skybox">
-                        <option value="0">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="ambiance">ambiance</label>
-                    <input type="text" class="form-control" id="ambiance" name="ambiance" value="{{ zone.ambiance }}">
-                </div>
-                <div class="form-group">
-                    <label for="sun">Soleil</label>
-                    <select class="form-control" id="sun" name="sun">
-                        <option>Oui</option>
-                        <option>Non</option>
-                    </select>
-                </div>
+
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
         </div>

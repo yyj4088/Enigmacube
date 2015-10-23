@@ -72,8 +72,8 @@ var AuthController = {
     
     // mark the user as logged out for auth purposes
     req.session.authenticated = false;
-    
-    res.redirect('/');
+
+    res.redirect(req.query.next || '/');
   },
 
   /**
@@ -170,7 +170,7 @@ var AuthController = {
         
         // Upon successful login, send the user to the homepage were req.user
         // will be available.
-        res.redirect('/');
+        res.redirect(req.query.next || '/');
       });
     });
   },

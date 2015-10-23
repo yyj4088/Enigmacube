@@ -23,6 +23,30 @@ module.exports = function (grunt) {
                     cwd: 'node_modules/three',
                     src: ['three.min.js'],
                     dest: 'assets/js/dependencies'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/bootstrap/dist/css',
+                    src: ['bootstrap.min.css', 'bootstrap-theme.min.css'],
+                    dest: 'assets/styles'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/bootstrap/dist/js',
+                    src: ['bootstrap.min.js'],
+                    dest: 'assets/js/dependencies'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/bootstrap/dist/fonts',
+                    src: ['**/*'],
+                    dest: 'assets/fonts'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/jquery/dist',
+                    src: ['jquery.min.map', 'jquery.min.js'],
+                    dest: 'assets/js/dependencies'
                 }
             ]
         },
@@ -31,7 +55,7 @@ module.exports = function (grunt) {
                 {
                     expand: true,
                     cwd: 'assets',
-                    src: ['**/*.!(coffee|less)'],
+                    src: ['**/*.!(scss|sass)'],
                     dest: '.tmp/public'
                 }
             ]
