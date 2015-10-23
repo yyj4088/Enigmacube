@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Not Found - 404</title>
+</head>
+<body>
+
+<h1>Une erreur est survenue</h1>
+
+<p>
+    {% if error %}
+        {{ error }}
+    {% else %}
+        Erreur 404
+    {% endif %}
+</p>
+
+</body>
+</html>

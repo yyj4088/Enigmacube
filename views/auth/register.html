@@ -1,0 +1,18 @@
+{% extends '../template/layout.html' %}
+
+{% block body %}
+
+    {% if errors %}
+        {% for error in errors %}
+            {{ error }}
+        {% endfor %}
+    {% endif %}
+
+    <form role="form" action="/auth/local/register?next=/admin" method="post">
+        <input type="text" name="username" placeholder="Username">
+        <input type="text" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <button type="submit">Sign up</button>
+    </form>
+
+{% endblock %}
