@@ -85,16 +85,10 @@ var User = {
         level: {
             type: 'integer'
         },
-        stuffsIdHandLeft: {
-            type: 'integer'
+        stuff: {
+            model: 'stuff'
         },
-        stuffsIdHandRight: {
-            type: 'integer'
-        },
-        stuffsCountHandLeft: {
-            type: 'integer'
-        },
-        stuffsCountHandRight: {
+        bullet: {
             type: 'integer'
         },
         zone: {
@@ -112,21 +106,13 @@ var User = {
                 return new Date();
             }
         },
-        stuff: {
+        stuffsUser: {
             collection: 'stuff',
-            via: 'user'
+            via: 'usersStuff'
         },
-        quest: {
+        questsUser: {
             collection: 'quest',
-            via: 'user'
-        },
-        log: {
-            collection: 'log',
-            via: 'user'
-        },
-        stat: {
-            collection: 'stat',
-            via: 'user'
+            via: 'usersQuest'
         }
     }
 };

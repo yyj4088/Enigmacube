@@ -50,26 +50,41 @@ module.exports = {
             return res.badRequest('No id provided.');
         }
 
-        User.findOne(id).exec(function editCB(err, user) {
-            if (err) {
+        User.findOne(id)
+            .populate('stuffsUser')
+            .populate('questsUser')
+            .then(function (user) {
+                var logs = Log.find({user: id}),
+                    stats = Stat.find({user: id}),
+                    zones = Zone.find().sort('name DESC'),
+                    stuffs = Stuff.find().sort('name DESC');
+
+                return [user, zones, stuffs, logs, stats];
+            })
+            .spread(function (user, zones, stuffs, logs, stats) {
+
+                var breadcrumbs = [{
+                    title: 'Users',
+                    link: '/admin/user'
+                }, {
+                    title: user.name,
+                    active: true
+                }];
+
+                res.view('user/form', {
+                    action: '/admin/user/' + user.id + '/update',
+                    user: user,
+                    zones: zones,
+                    logs: logs,
+                    stats: stats,
+                    stuffs: stuffs,
+                    breadcrumbs: breadcrumbs,
+                    controller: req.options.controller
+                });
+            })
+            .fail(function (err) {
                 return res.serverError(err);
-            }
-
-            var breadcrumbs = [{
-                title: 'Users',
-                link: '/admin/user'
-            }, {
-                title: user.name,
-                active: true
-            }];
-
-            res.view('user/form', {
-                action: '/admin/user/' + user.id + '/update',
-                user: user,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller
             });
-        });
     },
 
     insert: function (req, res) {

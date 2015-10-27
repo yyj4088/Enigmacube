@@ -9,22 +9,25 @@
 module.exports = {
 
     index: function (req, res) {
-        Log.find().sort('createdAt DESC').exec(function indexCB(err, logs) {
-            if (err) {
-                return res.serverError(err);
-            }
+        Log.find()
+            .populate('user')
+            .sort('createdAt DESC')
+            .exec(function indexCB(err, logs) {
+                if (err) {
+                    return res.serverError(err);
+                }
 
-            var breadcrumbs = [{
-                title: 'Logs',
-                active: true
-            }];
+                var breadcrumbs = [{
+                    title: 'Logs',
+                    active: true
+                }];
 
-            res.view('log/index', {
-                logs: logs,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller
+                res.view('log/index', {
+                    logs: logs,
+                    breadcrumbs: breadcrumbs,
+                    controller: req.options.controller
+                });
             });
-        });
     },
 
     create: function (req, res) {

@@ -64,9 +64,9 @@ module.exports = {
                 return new Date();
             }
         },
-        user: {
+        usersQuest: {
             collection: 'user',
-            via: 'quest'
+            via: 'questsUser'
         }
     }
 };

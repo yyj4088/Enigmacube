@@ -1,0 +1,26 @@
+{% if logs|length %}
+    <table class="table">
+        <tr>
+            <th width="60">ID</th>
+            <th>Titre</th>
+            <th>Utilisateur</th>
+            <th>Création</th>
+            <th>Mise à jour</th>
+            <td width="15"></td>
+            <td width="15"></td>
+        </tr>
+        {% for log in logs %}
+            <tr>
+                <td>{{ log.id }}</td>
+                <td><a href="/admin/log/{{ log.id }}">{{ log.title }}</a></td>
+                <td>{{ log.user.username }}</td>
+                <td>{{ log.createdAt }}</td>
+                <td>{{ log.updatedAt }}</td>
+                <td><a href="/admin/log/{{ log.id }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
+                <td><a href="/admin/log/{{ log.id }}/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2 class="lead text-center">Aucun log de disponible</h2>
+{% endif %}

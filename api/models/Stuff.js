@@ -38,9 +38,9 @@ module.exports = {
                 return new Date();
             }
         },
-        user: {
+        usersStuff: {
             collection: 'user',
-            via: 'stuff'
+            via: 'stuffsUser'
         }
     }
 };

@@ -9,22 +9,25 @@
 module.exports = {
 
     index: function (req, res) {
-        Article.find().sort('createdAt DESC').exec(function indexCB(err, articles) {
-            if (err) {
-                return res.serverError(err);
-            }
+        Article.find()
+            .populate('zone')
+            .sort('createdAt DESC')
+            .exec(function indexCB(err, articles) {
+                if (err) {
+                    return res.serverError(err);
+                }
 
-            var breadcrumbs = [{
-                title: 'Articles',
-                active: true
-            }];
+                var breadcrumbs = [{
+                    title: 'Articles',
+                    active: true
+                }];
 
-            res.view('article/index', {
-                articles: articles,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller
+                res.view('article/index', {
+                    articles: articles,
+                    breadcrumbs: breadcrumbs,
+                    controller: req.options.controller
+                });
             });
-        });
     },
 
     create: function (req, res) {
@@ -50,26 +53,32 @@ module.exports = {
             return res.badRequest('No id provided.');
         }
 
-        Article.findOne(id).exec(function editCB(err, article) {
-            if (err) {
+        Article.findOne(id)
+            .then(function (article) {
+                var zones = Zone.find().sort('name DESC');
+                return [article, zones];
+            })
+            .spread(function (article, zones) {
+
+                var breadcrumbs = [{
+                    title: 'Articles',
+                    link: '/admin/article'
+                }, {
+                    title: article.name,
+                    active: true
+                }];
+
+                res.view('article/form', {
+                    action: '/admin/article/' + article.id + '/update',
+                    article: article,
+                    zones: zones,
+                    breadcrumbs: breadcrumbs,
+                    controller: req.options.controller
+                });
+            })
+            .fail(function (err) {
                 return res.serverError(err);
-            }
-
-            var breadcrumbs = [{
-                title: 'Articles',
-                link: '/admin/article'
-            }, {
-                title: article.name,
-                active: true
-            }];
-
-            res.view('article/form', {
-                action: '/admin/article/' + article.id + '/update',
-                article: article,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller
             });
-        });
     },
 
     insert: function (req, res) {
@@ -79,7 +88,7 @@ module.exports = {
             }
 
             res.redirect('/admin/article');
-        })
+        });
     },
 
     update: function (req, res) {
@@ -95,7 +104,7 @@ module.exports = {
             }
 
             res.redirect('/admin/article');
-        })
+        });
     },
 
     delete: function (req, res) {
@@ -118,7 +127,6 @@ module.exports = {
 
                 res.redirect('/admin/article');
             });
-
         });
     }
 };
