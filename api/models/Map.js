@@ -83,7 +83,8 @@ module.exports = {
             }
         },
         zone: {
-            model: 'zone'
+            model: 'zone',
+            required: true
         }
     }
 };

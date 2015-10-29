@@ -23,8 +23,13 @@
                     </ul>
                 </li>
                 <li {% if controller == 'article' %} class="active" {% endif %}><a href="/admin/article">Articles</a></li>
-                <li {% if controller == 'stat' %} class="active" {% endif %}><a href="/admin/stat">Statistiques</a></li>
-                <li {% if controller == 'log' %} class="active" {% endif %}><a href="/admin/log">Logs</a></li>
+                <li {% if controller == 'stat' or controller == 'log' %} class="active" {% endif %} class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Plus <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/admin/stat">Statistiques</a></li>
+                        <li><a href="/admin/log">Logs</a></li>
+                    </ul>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -34,6 +39,7 @@
                         <li><a href="/admin/quest/new">Ajouter une quête</a></li>
                         <li><a href="/admin/stuff/new">Ajouter un équipement</a></li>
                         <li><a href="/admin/zone/new">Ajouter une zone</a></li>
+                        <li><a href="/logout">Déconnexion</a></li>
                     </ul>
                 </li>
             </ul>

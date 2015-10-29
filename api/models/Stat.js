@@ -29,7 +29,8 @@ module.exports = {
             }
         },
         user: {
-            model: 'user'
+            model: 'user',
+            required: true
         }
     }
 };

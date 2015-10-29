@@ -25,7 +25,8 @@ module.exports = {
                 res.view('log/index', {
                     logs: logs,
                     breadcrumbs: breadcrumbs,
-                    controller: req.options.controller
+                    controller: req.options.controller,
+                    alert: req.query.alert
                 });
             });
     },

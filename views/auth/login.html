@@ -8,13 +8,12 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        {% if errors %}
-                            {% for error in errors %}
-                                {{ error }}
-                            {% endfor %}
-                        {% endif %}
 
                         <h1>Identification</h1>
+
+                        {% block alert %}
+                            {% include '../template/alert.html' %}
+                        {% endblock %}
 
                         <form role="form" action="/auth/local?next=/admin" method="post">
 

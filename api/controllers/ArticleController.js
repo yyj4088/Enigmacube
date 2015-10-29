@@ -25,7 +25,8 @@ module.exports = {
                 res.view('article/index', {
                     articles: articles,
                     breadcrumbs: breadcrumbs,
-                    controller: req.options.controller
+                    controller: req.options.controller,
+                    alert: req.query.alert
                 });
             });
     },
@@ -87,7 +88,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/article');
+            res.redirect('/admin/article?alert=insert');
         });
     },
 
@@ -103,7 +104,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/article');
+            res.redirect('/admin/article?alert=save');
         });
     },
 
@@ -125,7 +126,7 @@ module.exports = {
                     return;
                 }
 
-                res.redirect('/admin/article');
+                res.redirect('/admin/article?alert=delete');
             });
         });
     }

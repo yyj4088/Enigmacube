@@ -4,11 +4,13 @@ var User = {
     attributes: {
         username: {
             type: 'string',
-            unique: true
+            unique: true,
+            required: true
         },
         email: {
             type: 'email',
-            unique: true
+            unique: true,
+            required: true
         },
         passports: {
             collection: 'Passport',
@@ -33,15 +35,18 @@ var User = {
         },
         x: {
             type: 'integer',
-            index: true
+            index: true,
+            required: true
         },
         y: {
             type: 'integer',
-            index: true
+            index: true,
+            required: true
         },
         z: {
             type: 'integer',
-            index: true
+            index: true,
+            required: true
         },
         positionX: {
             type: 'float'
@@ -92,7 +97,8 @@ var User = {
             type: 'integer'
         },
         zone: {
-            model: 'zone'
+            model: 'zone',
+            required: true
         },
         createdAt: {
             type: 'datetime',

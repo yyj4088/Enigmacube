@@ -22,7 +22,8 @@ module.exports = {
             res.view('quest/index', {
                 quests: quests,
                 breadcrumbs: breadcrumbs,
-                controller: req.options.controller
+                controller: req.options.controller,
+                alert: req.query.alert
             });
         });
     },

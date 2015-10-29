@@ -22,7 +22,8 @@ module.exports = {
             res.view('map/index', {
                 maps: maps,
                 breadcrumbs: breadcrumbs,
-                controller: req.options.controller
+                controller: req.options.controller,
+                alert: req.query.alert
             });
         });
     },

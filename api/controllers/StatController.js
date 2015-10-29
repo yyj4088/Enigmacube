@@ -22,7 +22,8 @@ module.exports = {
             res.view('stat/index', {
                 stats: stats,
                 breadcrumbs: breadcrumbs,
-                controller: req.options.controller
+                controller: req.options.controller,
+                alert: req.query.alert
             });
         });
     },

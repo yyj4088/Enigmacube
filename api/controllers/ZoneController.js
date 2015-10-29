@@ -22,7 +22,8 @@ module.exports = {
             res.view('zone/index', {
                 zones: zones,
                 breadcrumbs: breadcrumbs,
-                controller: req.options.controller
+                controller: req.options.controller,
+                alert: req.query.alert
             });
         });
     },

@@ -27,6 +27,9 @@
 
     <section class="container-fluid">
         {% block breadcrumb %}{% endblock %}
+        {% block alert %}
+            {% include './alert.html' %}
+        {% endblock %}
         {% block section %}{% endblock %}
     </section>
 
