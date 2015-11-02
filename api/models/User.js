@@ -25,7 +25,15 @@ var User = {
             type: 'string',
             size: 255
         },
+        avatarFile: {
+            type: 'string',
+            size: 255
+        },
         skin: {
+            type: 'string',
+            size: 255
+        },
+        skinFile: {
             type: 'string',
             size: 255
         },
@@ -34,28 +42,16 @@ var User = {
             size: 255
         },
         x: {
-            type: 'integer',
-            index: true,
+            type: 'float',
             required: true
         },
         y: {
-            type: 'integer',
-            index: true,
+            type: 'float',
             required: true
         },
         z: {
-            type: 'integer',
-            index: true,
+            type: 'float',
             required: true
-        },
-        positionX: {
-            type: 'float'
-        },
-        positionY: {
-            type: 'float'
-        },
-        positionZ: {
-            type: 'float'
         },
         speed: {
             type: 'float'

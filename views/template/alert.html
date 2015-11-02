@@ -1,23 +1,15 @@
 {% if errors|length %}
     <div id="alert">
-        <p class="bg-danger">
-            {% for error in errors %}
-                {{ error }}
-            {% endfor %}
-        </p>
+        {% for error in errors %}
+            <p class="bg-danger">{{ error }}</p>
+        {% endfor %}
     </div>
-{% elif alert|length %}
-    <div id="alert">
-        {% if alert == 'logout' %}
-            <p class="bg-danger">Vous êtes déconnecté</p>
-            {% elif alert == 'insert' %}
-            <p class="bg-success">Création effectuée</p>
-            {% elif alert == 'save' %}
-            <p class="bg-success">Enregistrement effectué</p>
-            {% elif alert == 'delete' %}
-            <p class="bg-success">Suppression effectuée</p>
-        {% else %}
-            <p class="bg-danger">{{ alert }}</p>
-        {% endif %}
+{% endif %}
+
+{% if infos|length %}
+    <div id="info">
+        {% for info in infos %}
+            <p class="bg-info">{{ info }}</p>
+        {% endfor %}
     </div>
 {% endif %}

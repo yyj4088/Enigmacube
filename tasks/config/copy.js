@@ -47,6 +47,12 @@ module.exports = function (grunt) {
                     cwd: 'node_modules/jquery/dist',
                     src: ['jquery.min.map', 'jquery.min.js'],
                     dest: 'assets/js/dependencies'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/filestyle/src',
+                    src: ['bootstrap-filestyle.min.js'],
+                    dest: 'assets/js/dependencies'
                 }
             ]
         },

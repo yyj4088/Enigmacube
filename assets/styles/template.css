@@ -23,6 +23,18 @@ footer p {
     padding: 0;
 }
 
+textarea {
+    resize: vertical;
+}
+
 #alert p {
     padding: 15px;
+}
+
+#info p {
+    padding: 15px;
+}
+
+.tab-content > .tab-pane {
+    margin-top: 20px;
 }

@@ -1,6 +1,6 @@
 module.exports.routes = {
 
-    '/':  'AuthController.login',
+    '/': 'AuthController.login',
 
 
     // Auth
@@ -17,7 +17,7 @@ module.exports.routes = {
 
 
     // Dashboard
-    'get /admin':  'DashboardController.index',
+    'get /admin': 'DashboardController.index',
 
 
     // Article
@@ -129,6 +129,15 @@ module.exports.routes = {
     'put /admin/zone/:id': 'ZoneController.update',
 
     'get /admin/zone/:id/delete': 'ZoneController.delete',
-    'delete /admin/zone/:id': 'ZoneController.delete'
+    'delete /admin/zone/:id': 'ZoneController.delete',
+
+    // File
+    'post /admin/user/:id/avatar': 'FileController.setAvatar',
+    'get /admin/user/:id/avatar': 'FileController.deleteAvatar',
+    'get /images/avatar/:id': 'FileController.getAvatar',
+
+    'post /admin/user/:id/skin': 'FileController.setSkin',
+    'get /admin/user/:id/skin': 'FileController.deleteSkin',
+    'get /images/skin/:id': 'FileController.getSkin'
 
 };

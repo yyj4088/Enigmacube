@@ -1,18 +1,13 @@
-/**
- * User.js
- *
- * @description :: articles controller imported from localhost MySql server at 15/10/2015 16:17:4.
- * @docs        :: http://sailsjs.org/#!documentation/controllers
- */
-
-
 module.exports = {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     index: function (req, res) {
         User.find().sort('createdAt DESC').exec(function indexCB(err, users) {
-            if (err) {
-                return res.serverError(err);
-            }
+            if (err) return res.negotiate(err);
 
             var breadcrumbs = [{
                 title: 'Users',
@@ -23,11 +18,17 @@ module.exports = {
                 users: users,
                 breadcrumbs: breadcrumbs,
                 controller: req.options.controller,
-                alert: req.query.alert
+                errors: req.flash('error'),
+                infos: req.flash('info')
             });
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     create: function (req, res) {
         var breadcrumbs = [{
             title: 'Users',
@@ -38,18 +39,24 @@ module.exports = {
         }];
 
         res.view('user/form', {
-            action: '/admin/user',
+            route: '/admin/user',
             breadcrumbs: breadcrumbs,
-            controller: req.options.controller
+            controller: req.options.controller,
+            errors: req.flash('error'),
+            infos: req.flash('info')
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     edit: function (req, res) {
         var id = req.param('id');
 
-        if (!id) {
-            return res.badRequest('No id provided.');
-        }
+        if (!id) return res.badRequest('No id provided.');
 
         User.findOne(id)
             .populate('stuffsUser')
@@ -73,14 +80,16 @@ module.exports = {
                 }];
 
                 res.view('user/form', {
-                    action: '/admin/user/' + user.id + '/update',
+                    route: '/admin/user/' + user.id,
                     user: user,
                     zones: zones,
                     logs: logs,
                     stats: stats,
                     stuffs: stuffs,
                     breadcrumbs: breadcrumbs,
-                    controller: req.options.controller
+                    controller: req.options.controller,
+                    errors: req.flash('error'),
+                    infos: req.flash('info')
                 });
             })
             .fail(function (err) {
@@ -88,54 +97,90 @@ module.exports = {
             });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     insert: function (req, res) {
         User.create(req.params.all(), function createCB(err, user) {
             if (err) {
-                return res.serverError(err);
+                req.flash('error', 'Une erreur est survenue lors de la création de l\'utilisateur');
+                return res.redirect('/admin/user');
             }
 
-            res.redirect('/admin/user');
+            req.flash('info', 'L\'utilisateur a bien été modifié');
+            return res.redirect('/admin/user');
         })
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     update: function (req, res) {
-        var id = req.param('id');
+        var id = req.param('id'),
+            password = req.param('password');
 
-        if (!id) {
-            return res.badRequest('No id provided.');
-        }
+        if (!id) return res.badRequest('No id provided.');
 
-        User.update({id: id}, req.params.all(), function afterwards(err, users) {
-            if (err) {
-                return res.serverError(err);
-            }
+        User.findOne(id)
+            .exec(function deleteCB(err, user) {
+                if (err) return res.badRequest('No user');
 
-            res.redirect('/admin/user');
-        })
+                User.update({id: id}, req.params.all(), function afterwards(err, users) {
+                    if (err) {
+                        req.flash('error', 'Une erreur est survenue lors de la mise à jour de l\'utilisateur');
+                        return res.redirect('/admin/user');
+                    }
+
+                    if (password.length) {
+                        Passport.update({user: id}, {password: password}, function afterwards(err, passports) {
+                            if (err) {
+                                req.flash('error', 'Une erreur est survenue lors du changement de mot de passe');
+                                return res.redirect('/admin/user');
+                            }
+
+                            req.flash('info', 'Le mot de passe de l\'utilisateur a bien été modifié');
+                            req.flash('info', 'L\'utilisateur a bien été modifié');
+                            return res.redirect('/admin/user');
+                        });
+                    }
+                    else {
+                        req.flash('info', 'L\'utilisateur a bien été modifié');
+                        return res.redirect('/admin/user');
+                    }
+                });
+            });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     delete: function (req, res) {
         var id = req.param('id');
 
-        if (!id) {
-            return res.badRequest('No id provided.');
-        }
+        if (!id) return res.badRequest('No id provided.');
 
-        User.findOne(id).exec(function deleteCB(err, user) {
-            if (err) {
-                return res.serverError(err);
-            }
+        User.findOne(id)
+            .exec(function deleteCB(err, user) {
+                if (err) return res.badRequest('No user');
 
-            user.destroy(function (err) {
-                if (err) {
-                    res.serverError(err);
-                    return;
-                }
+                user.destroy(function (err) {
+                    if (err) {
+                        req.flash('error', 'Une erreur est survenue lors de la suppression de l\'utilisateur');
+                        return res.redirect('/admin/user');
+                    }
 
-                res.redirect('/admin/user');
+                    req.flash('info', 'L\'utilisateur a bien été supprimé');
+                    return res.redirect('/admin/user');
+                });
+
             });
-
-        });
     }
-
 };

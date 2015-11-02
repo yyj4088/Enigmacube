@@ -1,0 +1,9 @@
+#previewAvatar, #previewSkin {
+    margin: 20px auto 30px;
+    width: 250px;
+    height: 250px;
+    position: relative;
+    background: #eeeeee center center;
+    background-size:cover;
+    border-radius: 6px;
+}

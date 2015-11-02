@@ -45,14 +45,15 @@
     "sails-disk": "^0.10.0",
     "sails-generate-auth": "^0.3.1",
     "sails-mysql": "^0.11.0",
+    "skipper-disk": "^0.5.4",
     "three": "^0.72.0",
-    "validator": "^4.1.0"
+    "validator": "^4.1.0",
+    "filestyle": "https://github.com/pasquelin/bootstrap-filestyle.git"
   },
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js"
   },
   "main": "app.js",
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

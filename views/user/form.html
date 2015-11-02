@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block section %}
-    <form action="{{ action }}" method="post">
+    <form action="{{ route }}/update" method="post">
         <div class="row">
             <div class="col-md-9">
                 <div>
 
-                    <ul class="nav nav-tabs" role="tablist">
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
                         <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profil</a></li>
                         <li role="presentation"><a href="#character" aria-controls="character" role="tab" data-toggle="tab">Personnage</a></li>
                         <li role="presentation"><a href="#stuffs" aria-controls="stuffs" role="tab" data-toggle="tab">Equipements</a></li>
@@ -49,58 +49,39 @@
                                 <label for="ip">IP</label>
                                 <input type="text" class="form-control" id="ip" name="ip" value="{{ user.ip }}">
                             </div>
-
-                            <div class="form-group">
-                                <label for="avatar">Avatar</label>
-                                <input type="text" class="form-control" id="avatar" name="avatar" value="{{ user.avatar }}">
-                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="character">
                             <div class="form-group">
-                                <label for="skin">Skin</label>
-                                <input type="text" class="form-control" id="skin" name="skin" value="{{ user.skin }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="x">X</label>
-                                <select class="form-control" id="x" name="x">
-                                    {% for i in range(0, 100) %}
-                                        <option value="{{ i }}" {% if i == user.x %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
+                                <label for="zone">Relié à la zone</label>
+                                <select class="form-control" id="zone" name="zone">
+                                    <option value="0">Aucune zone</option>
+                                    {% if zones %}
+                                        {% for zone in zones %}
+                                            <option value="{{ zone.id }}" {% if zone.id == user.zone %}selected="selected"{% endif %}>{{ zone.name }}</option>
+                                        {% endfor %}
+                                    {% endif %}
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="y">Y</label>
-                                <select class="form-control" id="y" name="y">
-                                    {% for i in range(0, 100) %}
-                                        <option value="{{ i }}" {% if i == user.y %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="z">Z</label>
-                                <select class="form-control" id="z" name="z">
-                                    {% for i in range(0, 100) %}
-                                        <option value="{{ i }}" {% if i == user.z %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="positionX">positionX</label>
-                                <input type="text" class="form-control" id="positionX" name="positionX" value="{{ user.positionX }}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="positionY">positionY</label>
-                                <input type="text" class="form-control" id="positionY" name="positionY" value="{{ user.positionY }}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="positionZ">positionZ</label>
-                                <input type="text" class="form-control" id="positionZ" name="positionZ" value="{{ user.positionZ }}" required>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="positionX">X</label>
+                                        <input type="text" class="form-control" id="positionX" name="positionX" value="{{ user.x }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="positionY">Y</label>
+                                        <input type="text" class="form-control" id="positionY" name="positionY" value="{{ user.y }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="positionZ">Z</label>
+                                        <input type="text" class="form-control" id="positionZ" name="positionZ" value="{{ user.z }}" required>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -126,98 +107,112 @@
                                 <input type="text" class="form-control" id="currentDirectionX" name="currentDirectionX" value="{{ user.currentDirectionX }}">
                             </div>
 
-                            <div class="form-group">
-                                <label for="zone">Relié à la zone</label>
-                                <select class="form-control" id="zone" name="zone">
-                                    <option value="0">Aucune zone</option>
-                                    {% if zones %}
-                                        {% for zone in zones %}
-                                            <option value="{{ zone.id }}" {% if zone.id == user.zone %}selected="selected"{% endif %}>{{ zone.name }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="hp">hp</label>
+                                        <select class="form-control" id="hp" name="hp">
+                                            {% for i in range(0, 100) %}
+                                                <option value="{{ i }}" {% if i == user.hp %}selected="selected"{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="hpMax">hpMax</label>
+                                        <select class="form-control" id="hpMax" name="hpMax">
+                                            {% for i in range(10, 100) %}
+                                                <option value="{{ i }}" {% if i == user.hpMax %}selected="selected"{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="hp">hp</label>
-                                <select class="form-control" id="hp" name="hp">
-                                    {% for i in range(0, 100) %}
-                                        <option value="{{ i }}" {% if i == user.hp %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="mp">mp</label>
+                                        <select class="form-control" id="mp" name="mp">
+                                            {% for i in range(0, 100) %}
+                                                <option value="{{ i }}" {% if i == user.mp %}selected="selected"{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="mpMax">mpMax</label>
+                                        <select class="form-control" id="mpMax" name="mpMax">
+                                            {% for i in range(10, 100) %}
+                                                <option value="{{ i }}" {% if i == user.mpMax %}selected="selected"{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="hpMax">hpMax</label>
-                                <select class="form-control" id="hpMax" name="hpMax">
-                                    {% for i in range(10, 100) %}
-                                        <option value="{{ i }}" {% if i == user.hpMax %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="xp">xp</label>
+                                        <input type="number" class="form-control" id="xp" name="xp" value="{{ user.xp }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="level">level</label>
+                                        <select class="form-control" id="level" name="level">
+                                            {% for i in range(1, 100) %}
+                                                <option value="{{ i }}" {% if i == user.level %}selected="selected"{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="mp">mp</label>
-                                <select class="form-control" id="mp" name="mp">
-                                    {% for i in range(0, 100) %}
-                                        <option value="{{ i }}" {% if i == user.mp %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="money">money</label>
+                                        <input type="number" class="form-control" id="money" name="money" value="{{ user.money }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="moneyBank">moneyBank</label>
+                                        <input type="number" class="form-control" id="moneyBank" name="moneyBank" value="{{ user.moneyBank }}" required>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="mpMax">mpMax</label>
-                                <select class="form-control" id="mpMax" name="mpMax">
-                                    {% for i in range(10, 100) %}
-                                        <option value="{{ i }}" {% if i == user.mpMax %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="stuff">Stuff</label>
+                                        <select class="form-control" id="stuff" name="stuff">
+                                            <option value="0">Aucun stuff</option>
+                                            {% if stuffs %}
+                                                {% for stuff in stuffs %}
+                                                    <option value="{{ stuff.id }}" {% if stuff.id == user.stuff %}selected="selected"{% endif %}>{{ stuff.name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="bullet">bullet</label>
+                                        <select class="form-control" id="bullet" name="bullet">
+                                            {% for i in range(0, 100) %}
+                                                <option value="{{ i }}" {% if i == user.bullet %}selected="selected"{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="xp">xp</label>
-                                <input type="number" class="form-control" id="xp" name="xp" value="{{ user.xp }}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="money">money</label>
-                                <input type="number" class="form-control" id="money" name="money" value="{{ user.money }}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="moneyBank">moneyBank</label>
-                                <input type="number" class="form-control" id="moneyBank" name="moneyBank" value="{{ user.moneyBank }}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="level">level</label>
-                                <select class="form-control" id="level" name="level">
-                                    {% for i in range(1, 100) %}
-                                        <option value="{{ i }}" {% if i == user.level %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="stuff">Stuff</label>
-                                <select class="form-control" id="stuff" name="stuff">
-                                    <option value="0">Aucun stuff</option>
-                                    {% if stuffs %}
-                                        {% for stuff in stuffs %}
-                                            <option value="{{ stuff.id }}" {% if stuff.id == user.stuff %}selected="selected"{% endif %}>{{ stuff.name }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="bullet">bullet</label>
-                                <select class="form-control" id="bullet" name="bullet">
-                                    {% for i in range(0, 100) %}
-                                        <option value="{{ i }}" {% if i == user.bullet %}selected="selected"{% endif %}>{{ i }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="stuffs">
                             {% set stuffs = user.stuffsUser %}
@@ -253,21 +248,85 @@
                             <p>Date de modification : {{ user.updatedAt }}</p>
                         {% endif %}
 
-                        <div class="row">
-
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-success btn-block">Enregistrer</button>
+                        {% if user.id %}
+                            <div class="form-group">
+                                <button type="button" class="btn btn-block {% if user.avatar %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#avatarModal" id="avatarModalButton">avatar</button>
                             </div>
+                        {% endif %}
 
+                        {% if user.id %}
+                            <div class="form-group">
+                                <button type="button" class="btn btn-block {% if user.skin %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#skinModal" id="skinModalButton">skin</button>
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+                            </div>
                             <div class="col-md-6">
                                 <button type="submit" class="btn btn-danger btn-block">Supprimer</button>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
+    {% if user.id %}
+        <div class="modal fade" id="avatarModal" tabindex="-1" role="dialog" aria-labelledby="avatarModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route }}/avatar" enctype="multipart/form-data" method="post" id="formAvatar">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Mettre à jour l'avatar</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="previewAvatar" style="background-image: url('{{ user.avatar }}')"></div>
+                            <p>Pour changer l'avatar de l'utilisateur, veuillez sélectionner un fichier de type JPG ou PNG.</p>
+
+                            <div class="form-group">
+                                <input type="file" name="avatar" id="fileAvatar" class="filestyle" data-buttonName="btn-primary" data-placeholder="{{ user.avatar }}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                            <button type="button" id="deleteAvatar" class="btn btn-danger {% if user.skin|length == 0 %}hidden{% endif %}" data-id="{{ user.id }}">Supprimer</button>
+                            <button type="submit" id="buttonAvatar" class="btn btn-primary">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if user.id %}
+        <div class="modal fade" id="skinModal" tabindex="-1" role="dialog" aria-labelledby="skinModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route }}/skin" enctype="multipart/form-data" method="post" id="formSkin">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Mettre à jour le skin</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="previewSkin" style="background-image: url('{{ user.skin }}')"></div>
+                            <p>Pour changer le skin du personnage, veuillez sélectionner un fichier de type JPG ou PNG.</p>
+
+                            <div class="form-group">
+                                <input type="file" name="skin" id="fileSkin" class="filestyle" data-buttonName="btn-primary" data-placeholder="{{ user.skin }}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                            <button type="button" id="deleteSkin" class="btn btn-danger {% if user.skin|length == 0 %}hidden{% endif %}" data-id="{{ user.id }}">Supprimer</button>
+                            <button type="submit" id="buttonSkin" class="btn btn-primary">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
