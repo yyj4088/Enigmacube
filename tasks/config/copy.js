@@ -53,6 +53,24 @@ module.exports = function (grunt) {
                     cwd: 'node_modules/filestyle/src',
                     src: ['bootstrap-filestyle.min.js'],
                     dest: 'assets/js/dependencies'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/datatables/media/js',
+                    src: ['jquery.dataTables.min.js'],
+                    dest: 'assets/js/dependencies'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/datatables/media/css',
+                    src: ['jquery.dataTables.min.css'],
+                    dest: 'assets/styles'
+                },
+                {
+                    expand: true,
+                    cwd: 'node_modules/datatables/media/images',
+                    src: ['**/*'],
+                    dest: 'assets/images'
                 }
             ]
         },
