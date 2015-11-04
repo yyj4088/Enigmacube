@@ -22,6 +22,7 @@ module.exports.routes = {
 
     // Article
     'get /admin/article': 'ArticleController.index',
+    'post /admin/article/list': 'ArticleController.list',
 
     'get /admin/article/new': 'ArticleController.create',
     'post /admin/article': 'ArticleController.insert',
@@ -36,6 +37,7 @@ module.exports.routes = {
 
     // Log
     'get /admin/log': 'LogController.index',
+    'post /admin/log/list': 'LogController.list',
 
     'get /admin/log/new': 'LogController.create',
     'post /admin/log': 'LogController.insert',
@@ -50,6 +52,7 @@ module.exports.routes = {
 
     // Map
     'get /admin/map': 'MapController.index',
+    'post /admin/map/list': 'MapController.list',
 
     'get /admin/map/new': 'MapController.create',
     'post /admin/map': 'MapController.insert',
@@ -64,6 +67,7 @@ module.exports.routes = {
 
     // Quest
     'get /admin/quest': 'QuestController.index',
+    'post /admin/quest/list': 'QuestController.list',
 
     'get /admin/quest/new': 'QuestController.create',
     'post /admin/quest': 'QuestController.insert',
@@ -78,6 +82,7 @@ module.exports.routes = {
 
     // Stat
     'get /admin/stat': 'StatController.index',
+    'post /admin/stat/list': 'StatController.list',
 
     'get /admin/stat/new': 'StatController.create',
     'post /admin/stat': 'StatController.insert',
@@ -92,6 +97,7 @@ module.exports.routes = {
 
     // Stuff
     'get /admin/stuff': 'StuffController.index',
+    'post /admin/stuff/list': 'StuffController.list',
 
     'get /admin/stuff/new': 'StuffController.create',
     'post /admin/stuff': 'StuffController.insert',
@@ -106,6 +112,7 @@ module.exports.routes = {
 
     // User
     'get /admin/user': 'UserController.index',
+    'post /admin/user/list': 'UserController.list',
 
     'get /admin/user/new': 'UserController.create',
     'post /admin/user': 'UserController.insert',
@@ -120,6 +127,7 @@ module.exports.routes = {
 
     // Zone
     'get /admin/zone': 'ZoneController.index',
+    'post /admin/zone/list': 'ZoneController.list',
 
     'get /admin/zone/new': 'ZoneController.create',
     'post /admin/zone': 'ZoneController.insert',
@@ -130,6 +138,7 @@ module.exports.routes = {
 
     'get /admin/zone/:id/delete': 'ZoneController.delete',
     'delete /admin/zone/:id': 'ZoneController.delete',
+
 
     // File
     'post /admin/user/:id/avatar': 'FileController.setAvatar',

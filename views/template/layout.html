@@ -11,6 +11,7 @@
         {% if sails.config.environment == 'development' %}
             <link rel="stylesheet" href="/styles/bootstrap.min.css">
             <link rel="stylesheet" href="/styles/bootstrap-theme.min.css">
+            <link rel="stylesheet" href="/styles/jquery.dataTables.bootstrap.css">
             <link rel="stylesheet" href="/styles/template.css">
             <link rel="stylesheet" href="/styles/user.css">
         {% else %}
@@ -48,8 +49,12 @@
         <script src="/js/dependencies/three.min.js"></script>
         <script src="/js/dependencies/jquery.min.js"></script>
         <script src="/js/dependencies/bootstrap.min.js"></script>
+        <script src="/js/dependencies/jquery.dataTables.min.js"></script>
+        <script src="/js/dataTables.bootstrap.js"></script>
         <script src="/js/dependencies/bootstrap-filestyle.min.js"></script>
+
         <script src="/js/app.js"></script>
+        <script src="/js/dataTable.js"></script>
         <script src="/js/user.js"></script>
     {% else %}
         <script src="/min/production.min.js"></script>

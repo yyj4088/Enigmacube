@@ -1,26 +1,24 @@
-{% if logs|length %}
-    <table class="table">
+<div class="table-wrapper">
+    <table class="table table-striped table-bordered dataTable" data-url="/admin/log/list" cellspacing="0" width="100%">
+        <thead>
         <tr>
-            <th width="60">ID</th>
+            <th data-sort="yes" width="50" data-class="text-left">ID</th>
+            <th data-sort="yes" data-class="text-left">Titre</th>
+            <th data-sort="yes" width="200" data-class="text-center">Utilisateur</th>
+            <th data-sort="yes" width="200" data-class="text-left">Création</th>
+            <th data-sort="yes" width="200" data-class="text-left">Mise à jour</th>
+            <th data-sort="no" width="50" data-class="text-center"></th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th>ID</th>
             <th>Titre</th>
             <th>Utilisateur</th>
             <th>Création</th>
             <th>Mise à jour</th>
-            <td width="15"></td>
-            <td width="15"></td>
+            <th></th>
         </tr>
-        {% for log in logs %}
-            <tr>
-                <td>{{ log.id }}</td>
-                <td><a href="/admin/log/{{ log.id }}">{{ log.title }}</a></td>
-                <td>{{ log.user.username }}</td>
-                <td>{{ log.createdAt }}</td>
-                <td>{{ log.updatedAt }}</td>
-                <td><a href="/admin/log/{{ log.id }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
-                <td><a href="/admin/log/{{ log.id }}/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a></td>
-            </tr>
-        {% endfor %}
+        </tfoot>
     </table>
-{% else %}
-    <h2 class="lead text-center">Aucun log de disponible</h2>
-{% endif %}
+</div>

@@ -1,23 +1,92 @@
 module.exports = {
 
     index: function (req, res) {
-        Stat.find().sort('createdAt DESC').exec(function indexCB(err, stats) {
-            if (err) {
-                return res.serverError(err);
-            }
+        var breadcrumbs = [{
+            title: 'Stats',
+            active: true
+        }];
 
-            var breadcrumbs = [{
-                title: 'Stats',
-                active: true
-            }];
-
-            res.view('stat/index', {
-                stats: stats,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller,
-                alert: req.query.alert
-            });
+        res.view('stat/index', {
+            breadcrumbs: breadcrumbs,
+            controller: req.options.controller
         });
+    },
+
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    list: function (req, res) {
+
+        var search = req.param('search'),
+            order = req.param('order'),
+            start = req.param('start'),
+            limit = req.param('limit'),
+            page = start / limit + 1,
+            sort = {id: 'desc'},
+            options = {
+                or: [
+                    {id: {'contains': search.value}},
+                    {title: {'contains': search.value}},
+                    {createdAt: {'contains': search.value}},
+                    {updatedAt: {'contains': search.value}}
+                ]
+            };
+
+        if (order[0].column) {
+            switch (order[0].column) {
+                case '0':
+                    sort = {id: order[0].dir};
+                    break;
+                case '1':
+                    sort = {title: order[0].dir};
+                    break;
+                case '3':
+                    sort = {createdAt: order[0].dir};
+                    break;
+                case '4':
+                    sort = {updatedAt: order[0].dir};
+                    break;
+            }
+        }
+
+        Stat.find(options)
+            .paginate({page: page, limit: limit})
+            .sort(sort)
+            .then(function (rows) {
+                var count = Stat.count(),
+                    filter = Stat.count(options);
+                return [rows, count, filter];
+            })
+            .spread(function (rows, count, filter) {
+
+                var list = [];
+
+                if (rows.length) {
+                    rows.forEach(function (row) {
+                        list.push([
+                            row.id,
+                            '<a href="/admin/stat/' + row.id + '">' + row.title + '</a>',
+                            row.user.username,
+                            row.createdAt,
+                            row.updatedAt,
+                            '<a href="/admin/stat/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/stat/' + row.id + '/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                        ]);
+                    });
+                }
+
+                res.json({
+                    draw: req.param('draw'),
+                    data: list,
+                    recordsTotal: count,
+                    recordsFiltered: filter
+                });
+            })
+            .fail(function (err) {
+                return res.serverError(err);
+            });
     },
 
     create: function (req, res) {

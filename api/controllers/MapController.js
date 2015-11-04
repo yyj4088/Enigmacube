@@ -1,23 +1,95 @@
 module.exports = {
 
     index: function (req, res) {
-        Map.find().sort('createdAt DESC').exec(function indexCB(err, maps) {
-            if (err) {
-                return res.serverError(err);
-            }
+        var breadcrumbs = [{
+            title: 'Maps',
+            active: true
+        }];
 
-            var breadcrumbs = [{
-                title: 'Maps',
-                active: true
-            }];
-
-            res.view('map/index', {
-                maps: maps,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller,
-                alert: req.query.alert
-            });
+        res.view('map/index', {
+            breadcrumbs: breadcrumbs,
+            controller: req.options.controller
         });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    list: function (req, res) {
+
+        var search = req.param('search'),
+            order = req.param('order'),
+            start = req.param('start'),
+            limit = req.param('limit'),
+            page = start / limit + 1,
+            sort = {id: 'desc'},
+            options = {
+                or: [
+                    {id: {'contains': search.value}},
+                    {name: {'contains': search.value}},
+                    {comment: {'contains': search.value}},
+                    {createdAt: {'contains': search.value}},
+                    {updatedAt: {'contains': search.value}}
+                ]
+            };
+
+        if (order[0].column) {
+            switch (order[0].column) {
+                case '0':
+                    sort = {id: order[0].dir};
+                    break;
+                case '1':
+                    sort = {name: order[0].dir};
+                    break;
+                case '2':
+                    sort = {comment: order[0].dir};
+                    break;
+                case '3':
+                    sort = {createdAt: order[0].dir};
+                    break;
+                case '4':
+                    sort = {updatedAt: order[0].dir};
+                    break;
+            }
+        }
+
+        Map.find(options)
+            .paginate({page: page, limit: limit})
+            .sort(sort)
+            .then(function (rows) {
+                var count = Map.count(),
+                    filter = Map.count(options);
+                return [rows, count, filter];
+            })
+            .spread(function (rows, count, filter) {
+
+                var list = [];
+
+                if (rows.length) {
+                    rows.forEach(function (row) {
+                        list.push([
+                            row.id,
+                            '<a href="/admin/map/' + row.id + '">' + row.name + '</a>',
+                            row.comment,
+                            row.createdAt,
+                            row.updatedAt,
+                            '<a href="/admin/map/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/map/' + row.id + '/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                        ]);
+                    });
+                }
+
+                res.json({
+                    draw: req.param('draw'),
+                    data: list,
+                    recordsTotal: count,
+                    recordsFiltered: filter
+                });
+            })
+            .fail(function (err) {
+                return res.serverError(err);
+            });
     },
 
     create: function (req, res) {

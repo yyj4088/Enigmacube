@@ -6,22 +6,102 @@ module.exports = {
      * @param res
      */
     index: function (req, res) {
-        User.find().sort('createdAt DESC').exec(function indexCB(err, users) {
-            if (err) return res.negotiate(err);
+        var breadcrumbs = [{
+            title: 'Users',
+            active: true
+        }];
 
-            var breadcrumbs = [{
-                title: 'Users',
-                active: true
-            }];
-
-            res.view('user/index', {
-                users: users,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller,
-                errors: req.flash('error'),
-                infos: req.flash('info')
-            });
+        res.view('user/index', {
+            breadcrumbs: breadcrumbs,
+            controller: req.options.controller,
+            errors: req.flash('error'),
+            infos: req.flash('info')
         });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    list: function (req, res) {
+
+        var search = req.param('search'),
+            order = req.param('order'),
+            start = req.param('start'),
+            limit = req.param('limit'),
+            page = start / limit + 1,
+            sort = {id: 'desc'},
+            options = {
+                or: [
+                    {id: {'contains': search.value}},
+                    {username: {'contains': search.value}},
+                    {email: {'contains': search.value}},
+                    {level: {'contains': search.value}},
+                    {createdAt: {'contains': search.value}},
+                    {updatedAt: {'contains': search.value}}
+                ]
+            };
+
+        if (order[0].column) {
+            switch (order[0].column) {
+                case '0':
+                    sort = {id: order[0].dir};
+                    break;
+                case '1':
+                    sort = {username: order[0].dir};
+                    break;
+                case '2':
+                    sort = {email: order[0].dir};
+                    break;
+                case '3':
+                    sort = {level: order[0].dir};
+                    break;
+                case '4':
+                    sort = {createdAt: order[0].dir};
+                    break;
+                case '5':
+                    sort = {updatedAt: order[0].dir};
+                    break;
+            }
+        }
+
+        User.find(options)
+            .paginate({page: page, limit: limit})
+            .sort(sort)
+            .then(function (rows) {
+                var count = User.count(),
+                    filter = User.find(options);
+                return [rows, count, filter];
+            })
+            .spread(function (rows, count, filter) {
+
+                var list = [];
+
+                if (rows.length) {
+                    rows.forEach(function (row) {
+                        list.push([
+                            row.id,
+                            '<a href="/admin/user/' + row.id + '">' + row.username + '</a>',
+                            row.email,
+                            row.level,
+                            row.createdAt,
+                            row.updatedAt,
+                            '<a href="/admin/user/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/user/' + row.id + '/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                        ]);
+                    });
+                }
+
+                res.json({
+                    draw: req.param('draw'),
+                    data: list,
+                    recordsTotal: count,
+                    recordsFiltered: filter.length
+                });
+            })
+            .fail(function (err) {
+                return res.serverError(err);
+            });
     },
 
     /**

@@ -9,6 +9,13 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true
         },
+        name: {
+            type: 'string',
+            size: 255
+        },
+        comment: {
+            type: 'text'
+        },
         x: {
             type: 'integer',
             index: true
@@ -61,10 +68,6 @@ module.exports = {
         },
         bot: {
             type: 'integer'
-        },
-        title: {
-            type: 'string',
-            size: 255
         },
         image: {
             type: 'string',

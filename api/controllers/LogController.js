@@ -1,25 +1,91 @@
 module.exports = {
 
     index: function (req, res) {
-        Log.find()
-            .populate('user')
-            .sort('createdAt DESC')
-            .exec(function indexCB(err, logs) {
-                if (err) {
-                    return res.serverError(err);
+        var breadcrumbs = [{
+            title: 'Logs',
+            active: true
+        }];
+
+        res.view('log/index', {
+            breadcrumbs: breadcrumbs,
+            controller: req.options.controller
+        });
+    },
+
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    list: function (req, res) {
+
+        var search = req.param('search'),
+            order = req.param('order'),
+            start = req.param('start'),
+            limit = req.param('limit'),
+            page = start / limit + 1,
+            sort = {id: 'desc'},
+            options = {
+                or: [
+                    {id: {'contains': search.value}},
+                    {title: {'contains': search.value}},
+                    {createdAt: {'contains': search.value}},
+                    {updatedAt: {'contains': search.value}}
+                ]
+            };
+
+        if (order[0].column) {
+            switch (order[0].column) {
+                case '0':
+                    sort = {id: order[0].dir};
+                    break;
+                case '1':
+                    sort = {title: order[0].dir};
+                    break;
+                case '3':
+                    sort = {createdAt: order[0].dir};
+                    break;
+                case '4':
+                    sort = {updatedAt: order[0].dir};
+                    break;
+            }
+        }
+
+        Log.find(options)
+            .paginate({page: page, limit: limit})
+            .sort(sort)
+            .then(function (rows) {
+                var count = Log.count(),
+                    filter = Log.count(options);
+                return [rows, count, filter];
+            })
+            .spread(function (rows, count, filter) {
+
+                var list = [];
+
+                if (rows.length) {
+                    rows.forEach(function (row) {
+                        list.push([
+                            row.id,
+                            '<a href="/admin/log/' + row.id + '">' + row.title + '</a>',
+                            row.username,
+                            row.createdAt,
+                            row.updatedAt,
+                            '<a href="/admin/log/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/log/' + row.id + '/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                        ]);
+                    });
                 }
 
-                var breadcrumbs = [{
-                    title: 'Logs',
-                    active: true
-                }];
-
-                res.view('log/index', {
-                    logs: logs,
-                    breadcrumbs: breadcrumbs,
-                    controller: req.options.controller,
-                    alert: req.query.alert
+                res.json({
+                    draw: req.param('draw'),
+                    data: list,
+                    recordsTotal: count,
+                    recordsFiltered: filter
                 });
+            })
+            .fail(function (err) {
+                return res.serverError(err);
             });
     },
 
