@@ -1,5 +1,10 @@
 module.exports = {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     index: function (req, res) {
         var breadcrumbs = [{
             title: 'Logs',
@@ -12,7 +17,6 @@ module.exports = {
         });
     },
 
-
     /**
      *
      * @param req
@@ -20,13 +24,14 @@ module.exports = {
      */
     list: function (req, res) {
 
-        var search = req.param('search'),
+        var id = req.param('id'),
+            search = req.param('search'),
             order = req.param('order'),
             start = req.param('start'),
             limit = req.param('limit'),
             page = start / limit + 1,
-            sort = {id: 'desc'},
             options = {
+                sort: {id: 'desc'},
                 or: [
                     {id: {'contains': search.value}},
                     {title: {'contains': search.value}},
@@ -35,26 +40,28 @@ module.exports = {
                 ]
             };
 
+        if(id) options.user = id;
+
         if (order[0].column) {
             switch (order[0].column) {
                 case '0':
-                    sort = {id: order[0].dir};
+                    options.sort = {id: order[0].dir};
                     break;
                 case '1':
-                    sort = {title: order[0].dir};
+                    options.sort = {title: order[0].dir};
                     break;
                 case '3':
-                    sort = {createdAt: order[0].dir};
+                    options.sort = {createdAt: order[0].dir};
                     break;
                 case '4':
-                    sort = {updatedAt: order[0].dir};
+                    options.sort = {updatedAt: order[0].dir};
                     break;
             }
         }
 
         Log.find(options)
+            .populate('user')
             .paginate({page: page, limit: limit})
-            .sort(sort)
             .then(function (rows) {
                 var count = Log.count(),
                     filter = Log.count(options);
@@ -69,7 +76,7 @@ module.exports = {
                         list.push([
                             row.id,
                             '<a href="/admin/log/' + row.id + '">' + row.title + '</a>',
-                            row.username,
+                            row.user.username,
                             row.createdAt,
                             row.updatedAt,
                             '<a href="/admin/log/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/log/' + row.id + '/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
@@ -89,6 +96,11 @@ module.exports = {
             });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     create: function (req, res) {
         var breadcrumbs = [{
             title: 'Logs',
@@ -105,6 +117,12 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     edit: function (req, res) {
         var id = req.param('id');
 
@@ -112,28 +130,34 @@ module.exports = {
             return res.badRequest('No id provided.');
         }
 
-        Log.findOne(id).exec(function editCB(err, log) {
-            if (err) {
-                return res.serverError(err);
-            }
+        Log.findOne(id)
+            .exec(function editCB(err, log) {
+                if (err) {
+                    return res.serverError(err);
+                }
 
-            var breadcrumbs = [{
-                title: 'Logs',
-                link: '/admin/log'
-            }, {
-                title: log.name,
-                active: true
-            }];
+                var breadcrumbs = [{
+                    title: 'Logs',
+                    link: '/admin/log'
+                }, {
+                    title: log.name,
+                    active: true
+                }];
 
-            res.view('log/form', {
-                action: '/admin/log/' + log.id + '/update',
-                log: log,
-                breadcrumbs: breadcrumbs,
-                controller: req.options.controller
+                res.view('log/form', {
+                    action: '/admin/log/' + log.id + '/update',
+                    log: log,
+                    breadcrumbs: breadcrumbs,
+                    controller: req.options.controller
+                });
             });
-        });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     insert: function (req, res) {
         Log.create(req.params.all(), function createCB(err, log) {
             if (err) {
@@ -144,6 +168,12 @@ module.exports = {
         })
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     update: function (req, res) {
         var id = req.param('id');
 
@@ -160,6 +190,12 @@ module.exports = {
         })
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     delete: function (req, res) {
         var id = req.param('id');
 

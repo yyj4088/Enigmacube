@@ -16,98 +16,139 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ quest.name }}" required>
+                            <label for="title">Titre</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ quest.title }}" required>
                         </div>
+
                         <div class="form-group">
                             <label for="comment">Comment</label>
                             <textarea class="form-control" id="comment" name="comment" rows="3">{{ quest.comment }}</textarea>
                         </div>
-                    </div>
-                    <div class="col-md-4">.col-md-4</div>
-                </div>
 
-                {% if quest.id %}
-                    <div class="form-group">
-                        <label for="id">ID</label>
-                        <input type="number" class="form-control" id="id" name="id" value="{{ quest.id }}" disabled>
-                    </div>
-                {% endif %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="mapStart">Elément de map début</label>
+                                    <select class="form-control" id="mapStart" name="mapStart">
+                                        {% for i in range(1, 100) %}
+                                            <option value="{{ i }}" {% if i == quest.level %}selected="selected"{% endif %}>{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="mapStop">Elément de map fin</label>
+                                    <select class="form-control" id="mapStop" name="mapStop">
+                                        {% for i in range(1, 100) %}
+                                            <option value="{{ i }}" {% if i == quest.level %}selected="selected"{% endif %}>{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="x">X</label>
-                    <select class="form-control" id="x" name="x">
-                        {% for i in range(1, 100) %}
-                            <option>{{ i }}</option>
-                        {% endfor %}
-                    </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="articleStart">Article de début</label>
+                                    <select class="form-control" id="articleStart" name="articleStart">
+                                        {% for i in range(1, 100) %}
+                                            <option value="{{ i }}" {% if i == quest.level %}selected="selected"{% endif %}>{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="articleStop">Article de fin</label>
+                                    <select class="form-control" id="articleStop" name="articleStop">
+                                        {% for i in range(1, 100) %}
+                                            <option value="{{ i }}" {% if i == quest.level %}selected="selected"{% endif %}>{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="xp">xp</label>
+                                    <input type="number" class="form-control" id="xp" name="xp" value="{{ quest.xp }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="level">level</label>
+                                    <select class="form-control" id="level" name="level">
+                                        {% for i in range(1, 100) %}
+                                            <option value="{{ i }}" {% if i == quest.level %}selected="selected"{% endif %}>{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="money">money</label>
+                            <input type="number" class="form-control" id="money" name="money" value="{{ quest.money }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="script">Script</label>
+                            <textarea class="form-control" id="script" name="script" rows="5">{{ quest.script }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Informations complémentaires</div>
+                            <div class="panel-body">
+                                {% if user.id %}
+                                    <p>Identifiant : {{ user.id }}</p>
+                                {% endif %}
+
+                                {% if user.createdAt %}
+                                    <p>Date de création : {{ user.createdAt }}</p>
+                                {% endif %}
+
+                                {% if user.updatedAt %}
+                                    <p>Date de modification : {{ user.updatedAt }}</p>
+                                {% endif %}
+
+                                <div class="form-group">
+                                    <label for="parent">Quête parent</label>
+                                    <select class="form-control" id="parent" name="parent">
+                                        <option {% if quest.parent == 0 %}selected="selected"{% endif %} value="0">nom</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="status">Actif</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="1">Oui</option>
+                                        <option {% if quest.status == 0 %}selected="selected"{% endif %} value="0">Non</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <button type="submit" class="btn-lg btn-primary btn-block">Enregistrer</button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <button type="submit" class="btn-lg btn-danger btn-block">Supprimer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="y">Y</label>
-                    <select class="form-control" id="y" name="y">
-                        {% for i in range(1, 100) %}
-                            <option>{{ i }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="z">Z</label>
-                    <select class="form-control" id="z" name="z">
-                        {% for i in range(1, 100) %}
-                            <option>{{ i }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="audio">Audio</label>
-                    <select class="form-control" id="audio" name="audio">
-                        <option value="">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="background">Background</label>
-                    <select class="form-control" id="background" name="background">
-                        <option value="">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="backgroundColor">Background color</label>
-                    <input type="text" class="form-control" id="backgroundColor" name="backgroundColor" value="{{ quest.backgroundColor }}">
-                </div>
-                <div class="form-group">
-                    <label for="degradation">Dégradation</label>
-                    <select class="form-control" id="degradation" name="degradation">
-                        <option value="0">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="frequency">Fréquence</label>
-                    <select class="form-control" id="frequency" name="frequency">
-                        <option value="0">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="script">Script</label>
-                    <textarea class="form-control" id="script" name="script" rows="3">{{ quest.script }}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="skybox">skybox</label>
-                    <select class="form-control" id="skybox" name="skybox">
-                        <option value="0">Aucun</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="ambiance">ambiance</label>
-                    <input type="text" class="form-control" id="ambiance" name="ambiance" value="{{ quest.ambiance }}">
-                </div>
-                <div class="form-group">
-                    <label for="sun">Soleil</label>
-                    <select class="form-control" id="sun" name="sun">
-                        <option>Oui</option>
-                        <option>Non</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
             </form>
         </div>
     </div>

@@ -110,11 +110,13 @@ var User = {
         },
         stuffsUser: {
             collection: 'stuff',
-            via: 'usersStuff'
+            via: 'usersStuff',
+            dominant: true
         },
         questsUser: {
             collection: 'quest',
-            via: 'usersQuest'
+            via: 'usersQuest',
+            dominant: true
         }
     }
 };

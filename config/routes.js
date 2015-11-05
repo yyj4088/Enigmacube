@@ -124,6 +124,20 @@ module.exports.routes = {
     'get /admin/user/:id/delete': 'UserController.delete',
     'delete /admin/user/:id': 'UserController.delete',
 
+    'post /admin/user/:id/stuff': 'UserController.listStuff',
+    'post /admin/user/:id/stuff/add': 'UserController.insertStuff',
+    'post /admin/user/:id/stuff/delete': 'UserController.deleteStuff',
+    'delete /admin/user/:id/stuff': 'UserController.deleteStuff',
+
+    'post /admin/user/:id/quest': 'UserController.listQuest',
+    'post /admin/user/:id/quest/add': 'UserController.insertQuest',
+    'post /admin/user/:id/quest/delete': 'UserController.deleteQuest',
+    'delete /admin/user/:id/quest': 'UserController.deleteQuest',
+
+    'post /admin/user/:id?/stat': 'StatController.list',
+
+    'post /admin/user/:id?/log': 'LogController.list',
+
 
     // Zone
     'get /admin/zone': 'ZoneController.index',

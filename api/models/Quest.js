@@ -49,9 +49,6 @@ module.exports = {
         articleStop: {
             model: 'article'
         },
-        articleHelp: {
-            model: 'article'
-        },
         createdAt: {
             type: 'datetime',
             defaultsTo: function () {

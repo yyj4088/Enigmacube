@@ -31,8 +31,8 @@ module.exports = {
             start = req.param('start'),
             limit = req.param('limit'),
             page = start / limit + 1,
-            sort = {id: 'desc'},
             options = {
+                sort: {id: 'desc'},
                 or: [
                     {id: {'contains': search.value}},
                     {username: {'contains': search.value}},
@@ -46,29 +46,28 @@ module.exports = {
         if (order[0].column) {
             switch (order[0].column) {
                 case '0':
-                    sort = {id: order[0].dir};
+                    options.sort = {id: order[0].dir};
                     break;
                 case '1':
-                    sort = {username: order[0].dir};
+                    options.sort = {username: order[0].dir};
                     break;
                 case '2':
-                    sort = {email: order[0].dir};
+                    options.sort = {email: order[0].dir};
                     break;
                 case '3':
-                    sort = {level: order[0].dir};
+                    options.sort = {level: order[0].dir};
                     break;
                 case '4':
-                    sort = {createdAt: order[0].dir};
+                    options.sort = {createdAt: order[0].dir};
                     break;
                 case '5':
-                    sort = {updatedAt: order[0].dir};
+                    options.sort = {updatedAt: order[0].dir};
                     break;
             }
         }
 
         User.find(options)
             .paginate({page: page, limit: limit})
-            .sort(sort)
             .then(function (rows) {
                 var count = User.count(),
                     filter = User.find(options);
@@ -139,17 +138,16 @@ module.exports = {
         if (!id) return res.badRequest('No id provided.');
 
         User.findOne(id)
-            .populate('stuffsUser')
-            .populate('questsUser')
             .then(function (user) {
-                var logs = Log.find({user: id}),
-                    stats = Stat.find({user: id}),
+                var logs = Log.find({user: id}).populate('user'),
+                    stats = Stat.find({user: id}).populate('user'),
                     zones = Zone.find().sort('name DESC'),
-                    stuffs = Stuff.find().sort('name DESC');
+                    stuffs = Stuff.find().sort('name DESC'),
+                    quests = Quest.find().sort('title DESC');
 
-                return [user, zones, stuffs, logs, stats];
+                return [user, zones, quests, stuffs, logs, stats];
             })
-            .spread(function (user, zones, stuffs, logs, stats) {
+            .spread(function (user, zones, quests, stuffs, logs, stats) {
 
                 var breadcrumbs = [{
                     title: 'Users',
@@ -166,6 +164,7 @@ module.exports = {
                     logs: logs,
                     stats: stats,
                     stuffs: stuffs,
+                    quests: quests,
                     breadcrumbs: breadcrumbs,
                     controller: req.options.controller,
                     errors: req.flash('error'),
@@ -191,7 +190,7 @@ module.exports = {
 
             req.flash('info', 'L\'utilisateur a bien été modifié');
             return res.redirect('/admin/user');
-        })
+        });
     },
 
     /**
@@ -262,5 +261,203 @@ module.exports = {
                 });
 
             });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    listStuff: function (req, res) {
+
+        var id = req.param('id'),
+            search = req.param('search'),
+            order = req.param('order'),
+            start = req.param('start'),
+            limit = req.param('limit'),
+            options = {
+                sort: {id: 'desc'},
+                limit: limit,
+                skip: start,
+                or: [
+                    {id: {'contains': search.value}},
+                    {name: {'contains': search.value}},
+                    {comment: {'contains': search.value}},
+                    {createdAt: {'contains': search.value}},
+                    {updatedAt: {'contains': search.value}}
+                ]
+            };
+
+        if (order[0].column) {
+            switch (order[0].column) {
+                case '0':
+                    options.sort = {id: order[0].dir};
+                    break;
+                case '1':
+                    options.sort = {name: order[0].dir};
+                    break;
+                case '2':
+                    options.sort = {comment: order[0].dir};
+                    break;
+                case '3':
+                    options.sort = {createdAt: order[0].dir};
+                    break;
+                case '4':
+                    options.sort = {updatedAt: order[0].dir};
+                    break;
+            }
+        }
+
+        User.findOne(id)
+            .populate('stuffsUser', options)
+            .then(function (user) {
+                delete options.limit;
+                delete options.skip;
+                var count = User.findOne(id).populate('stuffsUser'),
+                    filter = User.findOne(id).populate('stuffsUser', options);
+                return [user, count, filter];
+            })
+            .spread(function (user, count, filter) {
+
+                var list = [];
+
+                if (user.stuffsUser.length) {
+                    user.stuffsUser.forEach(function (row) {
+                        list.push([
+                            row.id,
+                            '<a href="/admin/stuff/' + row.id + '">' + row.name + '</a>',
+                            row.comment,
+                            row.createdAt,
+                            row.updatedAt,
+                            '<a href="/admin/stuff/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/user/' + row.id + '/stuff/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                        ]);
+                    });
+                }
+
+                res.json({
+                    draw: req.param('draw'),
+                    data: list,
+                    recordsTotal: count.stuffsUser.length,
+                    recordsFiltered: filter.stuffsUser.length
+                });
+            })
+            .fail(function (err) {
+                return res.serverError(err);
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    insertStuff: function (req, res) {
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    deleteStuff: function (req, res) {
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    listQuest: function (req, res) {
+
+        var id = req.param('id'),
+            search = req.param('search'),
+            order = req.param('order'),
+            start = req.param('start'),
+            limit = req.param('limit'),
+            options = {
+                sort: {id: 'desc'},
+                limit: limit,
+                skip: start,
+                or: [
+                    {id: {'contains': search.value}},
+                    {title: {'contains': search.value}},
+                    {comment: {'contains': search.value}},
+                    {createdAt: {'contains': search.value}},
+                    {updatedAt: {'contains': search.value}}
+                ]
+            };
+
+        if (order[0].column) {
+            switch (order[0].column) {
+                case '0':
+                    options.sort = {id: order[0].dir};
+                    break;
+                case '1':
+                    options.sort = {title: order[0].dir};
+                    break;
+                case '2':
+                    options.sort = {comment: order[0].dir};
+                    break;
+                case '3':
+                    options.sort = {createdAt: order[0].dir};
+                    break;
+                case '4':
+                    options.sort = {updatedAt: order[0].dir};
+                    break;
+            }
+        }
+
+        User.findOne(id)
+            .populate('questsUser', options)
+            .then(function (user) {
+                delete options.limit;
+                delete options.skip;
+                var count = User.findOne(id).populate('questsUser'),
+                    filter = User.findOne(id).populate('questsUser', options);
+                return [user, count, filter];
+            })
+            .spread(function (user, count, filter) {
+
+                var list = [];
+
+                if (user.questsUser.length) {
+                    user.questsUser.forEach(function (row) {
+                        list.push([
+                            row.id,
+                            '<a href="/admin/quest/' + row.id + '">' + row.title + '</a>',
+                            row.comment,
+                            row.createdAt,
+                            row.updatedAt,
+                            '<a href="/admin/quest/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/user/' + row.id + '/quest/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                        ]);
+                    });
+                }
+
+                res.json({
+                    draw: req.param('draw'),
+                    data: list,
+                    recordsTotal: count.questsUser.length,
+                    recordsFiltered: filter.questsUser.length
+                });
+            })
+            .fail(function (err) {
+                return res.serverError(err);
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    insertQuest: function (req, res) {
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    deleteQuest: function (req, res) {
     }
 };

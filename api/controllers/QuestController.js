@@ -17,7 +17,6 @@ module.exports = {
         });
     },
 
-
     /**
      *
      * @param req
@@ -30,8 +29,8 @@ module.exports = {
             start = req.param('start'),
             limit = req.param('limit'),
             page = start / limit + 1,
-            sort = {id: 'desc'},
             options = {
+                sort: {id: 'desc'},
                 or: [
                     {id: {'contains': search.value}},
                     {title: {'contains': search.value}},
@@ -44,26 +43,25 @@ module.exports = {
         if (order[0].column) {
             switch (order[0].column) {
                 case '0':
-                    sort = {id: order[0].dir};
+                    options.sort = {id: order[0].dir};
                     break;
                 case '1':
-                    sort = {title: order[0].dir};
+                    options.sort = {title: order[0].dir};
                     break;
                 case '2':
-                    sort = {comment: order[0].dir};
+                    options.sort = {comment: order[0].dir};
                     break;
                 case '3':
-                    sort = {createdAt: order[0].dir};
+                    options.sort = {createdAt: order[0].dir};
                     break;
                 case '4':
-                    sort = {updatedAt: order[0].dir};
+                    options.sort = {updatedAt: order[0].dir};
                     break;
             }
         }
 
         Quest.find(options)
             .paginate({page: page, limit: limit})
-            .sort(sort)
             .then(function (rows) {
                 var count = Quest.count(),
                     filter = Quest.count(options);

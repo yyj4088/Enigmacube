@@ -1,5 +1,10 @@
 module.exports = {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     index: function (req, res) {
         var breadcrumbs = [{
             title: 'Articles',
@@ -11,7 +16,6 @@ module.exports = {
             controller: req.options.controller
         });
     },
-
 
     /**
      *
@@ -25,8 +29,8 @@ module.exports = {
             start = req.param('start'),
             limit = req.param('limit'),
             page = start / limit + 1,
-            sort = {id: 'desc'},
             options = {
+                sort: {id: 'desc'},
                 or: [
                     {id: {'contains': search.value}},
                     {title: {'contains': search.value}},
@@ -38,19 +42,19 @@ module.exports = {
         if (order[0].column) {
             switch (order[0].column) {
                 case '0':
-                    sort = {id: order[0].dir};
+                    options.sort = {id: order[0].dir};
                     break;
                 case '1':
-                    sort = {title: order[0].dir};
+                    options.sort = {title: order[0].dir};
                     break;
                 case '2':
-                    sort = {status: order[0].dir};
+                    options.sort = {status: order[0].dir};
                     break;
                 case '4':
-                    sort = {createdAt: order[0].dir};
+                    options.sort = {createdAt: order[0].dir};
                     break;
                 case '5':
-                    sort = {updatedAt: order[0].dir};
+                    options.sort = {updatedAt: order[0].dir};
                     break;
             }
         }
@@ -58,7 +62,6 @@ module.exports = {
         Article.find(options)
             .populate('zone')
             .paginate({page: page, limit: limit})
-            .sort(sort)
             .then(function (rows) {
                 var count = Article.count(),
                     filter = Article.count(options);
@@ -93,6 +96,11 @@ module.exports = {
             });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     create: function (req, res) {
         var breadcrumbs = [{
             title: 'Articles',
@@ -109,6 +117,12 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     edit: function (req, res) {
         var id = req.param('id');
 
@@ -144,6 +158,11 @@ module.exports = {
             });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     insert: function (req, res) {
         Article.create(req.params.all(), function createCB(err, article) {
             if (err) {
@@ -154,6 +173,12 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     update: function (req, res) {
         var id = req.param('id');
 
@@ -170,6 +195,12 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     delete: function (req, res) {
         var id = req.param('id');
 

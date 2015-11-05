@@ -1,5 +1,10 @@
 module.exports = {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     index: function (req, res) {
         var breadcrumbs = [{
             title: 'Maps',
@@ -24,8 +29,8 @@ module.exports = {
             start = req.param('start'),
             limit = req.param('limit'),
             page = start / limit + 1,
-            sort = {id: 'desc'},
             options = {
+                sort: {id: 'desc'},
                 or: [
                     {id: {'contains': search.value}},
                     {name: {'contains': search.value}},
@@ -38,26 +43,25 @@ module.exports = {
         if (order[0].column) {
             switch (order[0].column) {
                 case '0':
-                    sort = {id: order[0].dir};
+                    options.sort = {id: order[0].dir};
                     break;
                 case '1':
-                    sort = {name: order[0].dir};
+                    options.sort = {name: order[0].dir};
                     break;
                 case '2':
-                    sort = {comment: order[0].dir};
+                    options.sort = {comment: order[0].dir};
                     break;
                 case '3':
-                    sort = {createdAt: order[0].dir};
+                    options.sort = {createdAt: order[0].dir};
                     break;
                 case '4':
-                    sort = {updatedAt: order[0].dir};
+                    options.sort = {updatedAt: order[0].dir};
                     break;
             }
         }
 
         Map.find(options)
             .paginate({page: page, limit: limit})
-            .sort(sort)
             .then(function (rows) {
                 var count = Map.count(),
                     filter = Map.count(options);
@@ -92,6 +96,11 @@ module.exports = {
             });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     create: function (req, res) {
         var breadcrumbs = [{
             title: 'Maps',
@@ -108,6 +117,12 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     edit: function (req, res) {
         var id = req.param('id');
 
@@ -137,6 +152,11 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     insert: function (req, res) {
         Map.create(req.params.all(), function createCB(err, map) {
             if (err) {
@@ -147,6 +167,12 @@ module.exports = {
         })
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     update: function (req, res) {
         var id = req.param('id');
 
@@ -163,6 +189,12 @@ module.exports = {
         })
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     delete: function (req, res) {
         var id = req.param('id');
 

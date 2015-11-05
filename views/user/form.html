@@ -215,17 +215,71 @@
 
                         </div>
                         <div role="tabpanel" class="tab-pane" id="stuffs">
-                            {% set stuffs = user.stuffsUser %}
+                            {% set stuffsUrl = '/admin/user/'+user.id+'/stuff' %}
                             {% include '../stuff/list.html' %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Options</div>
+                                <div class="panel-body">
+                                    <p>Ajouter un équipement</p>
+
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <select class="form-control" id="stuffAdd">
+                                                    <option value="0">Aucun stuff</option>
+                                                    {% if stuffs %}
+                                                        {% for stuff in stuffs %}
+                                                            <option value="{{ stuff.id }}">{{ stuff.name }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary btn-block" id="addStuff">Ajouter</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="quests">
-                            {% set quests = user.questsUser %}
+                            {% set questsUrl = '/admin/user/'+user.id+'/quest' %}
                             {% include '../quest/list.html' %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Options</div>
+                                <div class="panel-body">
+                                    <p>Ajouter un équipement</p>
+
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <select class="form-control" id="questAdd">
+                                                    <option value="0">Aucune quête</option>
+                                                    {% if quests %}
+                                                        {% for quest in quests %}
+                                                            <option value="{{ quest.id }}">{{ quest.title }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary btn-block" id="addQuest">Ajouter</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="logs">
+                            {% set logsUrl = '/admin/user/'+user.id+'/log' %}
                             {% include '../log/list.html' %}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="stats">
+                            {% set statsUrl = '/admin/user/'+user.id+'/stat' %}
                             {% include '../stat/list.html' %}
                         </div>
                     </div>
@@ -233,6 +287,7 @@
                 </div>
             </div>
             <div class="col-md-3">
+
                 <div class="panel panel-default">
                     <div class="panel-heading">Informations complémentaires</div>
                     <div class="panel-body">
@@ -247,26 +302,40 @@
                         {% if user.updatedAt %}
                             <p>Date de modification : {{ user.updatedAt }}</p>
                         {% endif %}
+                    </div>
+                </div>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Imagerie</div>
+                    <div class="panel-body">
 
                         {% if user.id %}
+                            <p>Permet de rajouter un avatar à l'utilisateur.</p>
                             <div class="form-group">
                                 <button type="button" class="btn btn-block {% if user.avatar %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#avatarModal" id="avatarModalButton">avatar</button>
                             </div>
                         {% endif %}
 
                         {% if user.id %}
+                            <p>Permet de habiller le personnage de l'utilisateur.</p>
                             <div class="form-group">
                                 <button type="button" class="btn btn-block {% if user.skin %}btn-success{% else %}btn-default{% endif %}" data-toggle="modal" data-target="#skinModal" id="skinModalButton">skin</button>
                             </div>
                         {% endif %}
+                    </div>
+                </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
-                            </div>
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-danger btn-block">Supprimer</button>
-                            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <button type="submit" class="btn-lg btn-primary btn-block">Enregistrer</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <button type="submit" class="btn-lg btn-danger btn-block">Supprimer</button>
                         </div>
                     </div>
                 </div>
@@ -292,9 +361,9 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                             <button type="button" id="deleteAvatar" class="btn btn-danger {% if user.skin|length == 0 %}hidden{% endif %}" data-id="{{ user.id }}">Supprimer</button>
                             <button type="submit" id="buttonAvatar" class="btn btn-primary">Upload</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                         </div>
                     </form>
                 </div>
@@ -320,9 +389,9 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                             <button type="button" id="deleteSkin" class="btn btn-danger {% if user.skin|length == 0 %}hidden{% endif %}" data-id="{{ user.id }}">Supprimer</button>
                             <button type="submit" id="buttonSkin" class="btn btn-primary">Upload</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                         </div>
                     </form>
                 </div>
