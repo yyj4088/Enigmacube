@@ -11,7 +11,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('log/index', {
+        return res.view('log/index', {
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
         });
@@ -31,7 +31,7 @@ module.exports = {
             limit = req.param('limit'),
             page = start / limit + 1,
             options = {
-                sort: {id: 'desc'},
+                sort: {id: 'asc'},
                 or: [
                     {id: {'contains': search.value}},
                     {title: {'contains': search.value}},
@@ -40,7 +40,7 @@ module.exports = {
                 ]
             };
 
-        if(id) options.user = id;
+        if (id) options.user = id;
 
         if (order[0].column) {
             switch (order[0].column) {
@@ -73,6 +73,10 @@ module.exports = {
 
                 if (rows.length) {
                     rows.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
                             '<a href="/admin/log/' + row.id + '">' + row.title + '</a>',
@@ -84,7 +88,7 @@ module.exports = {
                     });
                 }
 
-                res.json({
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
                     recordsTotal: count,
@@ -110,7 +114,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('log/form', {
+        return res.view('log/form', {
             action: '/admin/log',
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
@@ -144,7 +148,10 @@ module.exports = {
                     active: true
                 }];
 
-                res.view('log/form', {
+                log.createdAt = Helper.date(log.createdAt);
+                log.updatedAt = Helper.date(log.updatedAt);
+
+                return res.view('log/form', {
                     action: '/admin/log/' + log.id + '/update',
                     log: log,
                     breadcrumbs: breadcrumbs,
@@ -164,8 +171,8 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/log');
-        })
+            return res.redirect('/admin/log');
+        });
     },
 
     /**
@@ -186,7 +193,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/log');
+            return res.redirect('/admin/log');
         })
     },
 
@@ -214,7 +221,7 @@ module.exports = {
                     return;
                 }
 
-                res.redirect('/admin/log');
+                return res.redirect('/admin/log');
             });
 
         });

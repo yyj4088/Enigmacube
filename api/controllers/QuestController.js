@@ -11,7 +11,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('quest/index', {
+        return res.view('quest/index', {
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
         });
@@ -73,6 +73,10 @@ module.exports = {
 
                 if (rows.length) {
                     rows.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
                             '<a href="/admin/quest/' + row.id + '">' + row.title + '</a>',
@@ -84,7 +88,7 @@ module.exports = {
                     });
                 }
 
-                res.json({
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
                     recordsTotal: count,
@@ -110,7 +114,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('quest/form', {
+        return res.view('quest/form', {
             action: '/admin/quest',
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
@@ -143,7 +147,10 @@ module.exports = {
                 active: true
             }];
 
-            res.view('quest/form', {
+            quest.createdAt = Helper.date(quest.createdAt);
+            quest.updatedAt = Helper.date(quest.updatedAt);
+
+            return res.view('quest/form', {
                 action: '/admin/quest/' + quest.id + '/update',
                 quest: quest,
                 breadcrumbs: breadcrumbs,
@@ -163,7 +170,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/quest');
+            return res.redirect('/admin/quest');
         })
     },
 
@@ -185,7 +192,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/quest');
+            return res.redirect('/admin/quest');
         })
     },
 
@@ -213,7 +220,7 @@ module.exports = {
                     return;
                 }
 
-                res.redirect('/admin/quest');
+                return res.redirect('/admin/quest');
             });
 
         });

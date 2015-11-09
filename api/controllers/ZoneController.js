@@ -11,7 +11,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('zone/index', {
+        return res.view('zone/index', {
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
         });
@@ -73,6 +73,10 @@ module.exports = {
 
                 if (rows.length) {
                     rows.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
                             '<a href="/admin/zone/' + row.id + '">' + row.name + '</a>',
@@ -84,7 +88,7 @@ module.exports = {
                     });
                 }
 
-                res.json({
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
                     recordsTotal: count,
@@ -110,7 +114,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('zone/form', {
+        return res.view('zone/form', {
             action: '/admin/zone',
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
@@ -143,7 +147,10 @@ module.exports = {
                 active: true
             }];
 
-            res.view('zone/form', {
+            zone.createdAt = Helper.date(zone.createdAt);
+            zone.updatedAt = Helper.date(zone.updatedAt);
+
+            return res.view('zone/form', {
                 action: '/admin/zone/' + zone.id + '/update',
                 zone: zone,
                 breadcrumbs: breadcrumbs,
@@ -163,7 +170,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/zone');
+            return res.redirect('/admin/zone');
         })
     },
 
@@ -185,7 +192,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/zone');
+            return res.redirect('/admin/zone');
         })
     },
 
@@ -213,7 +220,7 @@ module.exports = {
                     return;
                 }
 
-                res.redirect('/admin/zone');
+                return res.redirect('/admin/zone');
             });
 
         });

@@ -1,5 +1,5 @@
 <div class="table-wrapper">
-    <table class="table table-striped table-bordered dataTable" data-url="/admin/user/list" cellspacing="0" width="100%">
+    <table class="table table-striped table-bordered dataTable" data-url="{% if usersUrl %}{{ usersUrl }}{% else %}/admin/user/list{% endif %}" cellspacing="0" width="100%" id="listTableUser">
         <thead>
         <tr>
             <th width="60" data-sort="yes" data-class="text-left">ID</th>

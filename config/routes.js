@@ -110,32 +110,42 @@ module.exports.routes = {
     'delete /admin/stuff/:id': 'StuffController.delete',
 
 
-    // User
+    /**
+     * User
+     */
+    // index and list
     'get /admin/user': 'UserController.index',
     'post /admin/user/list': 'UserController.list',
 
+    // create
     'get /admin/user/new': 'UserController.create',
     'post /admin/user': 'UserController.insert',
 
+    // edit
     'get /admin/user/:id': 'UserController.edit',
     'post /admin/user/:id/update': 'UserController.update',
     'put /admin/user/:id': 'UserController.update',
 
+    // delete
     'get /admin/user/:id/delete': 'UserController.delete',
     'delete /admin/user/:id': 'UserController.delete',
 
+    // stuff
     'post /admin/user/:id/stuff': 'UserController.listStuff',
     'post /admin/user/:id/stuff/add': 'UserController.insertStuff',
     'post /admin/user/:id/stuff/delete': 'UserController.deleteStuff',
     'delete /admin/user/:id/stuff': 'UserController.deleteStuff',
 
+    // quest
     'post /admin/user/:id/quest': 'UserController.listQuest',
     'post /admin/user/:id/quest/add': 'UserController.insertQuest',
     'post /admin/user/:id/quest/delete': 'UserController.deleteQuest',
     'delete /admin/user/:id/quest': 'UserController.deleteQuest',
 
+    // stat
     'post /admin/user/:id?/stat': 'StatController.list',
 
+    // log
     'post /admin/user/:id?/log': 'LogController.list',
 
 

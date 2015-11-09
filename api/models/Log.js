@@ -5,7 +5,6 @@ module.exports = {
     attributes: {
         id: {
             type: 'integer',
-            unique: true,
             primaryKey: true,
             autoIncrement: true
         },
@@ -32,5 +31,27 @@ module.exports = {
             model: 'user',
             required: true
         }
+    },
+
+    /**
+     *
+     * @param id
+     * @param title
+     * @param content
+     * @param callback
+     */
+    add: function (id, title, content, callback) {
+        var params = {
+            title: title,
+            content: content,
+            user: id
+        };
+        Log.create(params, function createCB(err, log) {
+            if (err) {
+                return res.serverError(err);
+            }
+
+            if (callback) callback(log);
+        });
     }
 };

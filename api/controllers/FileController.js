@@ -1,5 +1,11 @@
 module.exports = {
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     setAvatar: function (req, res) {
         var upload = req.file('avatar'),
             file = upload._files[0].stream,
@@ -35,6 +41,11 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     getAvatar: function (req, res) {
         req.validate({
             id: 'string'
@@ -55,6 +66,11 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     deleteAvatar: function (req, res) {
         var id = req.param('id');
 
@@ -76,6 +92,12 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     setSkin: function (req, res) {
         var upload = req.file('skin'),
             file = upload._files[0].stream,
@@ -111,6 +133,11 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     getSkin: function (req, res) {
         req.validate({
             id: 'string'
@@ -131,6 +158,11 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     deleteSkin: function (req, res) {
         var id = req.param('id');
 

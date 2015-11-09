@@ -11,7 +11,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('map/index', {
+        return res.view('map/index', {
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
         });
@@ -84,7 +84,7 @@ module.exports = {
                     });
                 }
 
-                res.json({
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
                     recordsTotal: count,
@@ -110,7 +110,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('map/form', {
+        return res.view('map/form', {
             action: '/admin/map',
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
@@ -143,7 +143,7 @@ module.exports = {
                 active: true
             }];
 
-            res.view('map/form', {
+            return res.view('map/form', {
                 action: '/admin/map/' + map.id + '/update',
                 map: map,
                 breadcrumbs: breadcrumbs,
@@ -163,8 +163,8 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/map');
-        })
+            return res.redirect('/admin/map');
+        });
     },
 
     /**
@@ -185,7 +185,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/map');
+            return res.redirect('/admin/map');
         })
     },
 
@@ -213,7 +213,7 @@ module.exports = {
                     return;
                 }
 
-                res.redirect('/admin/map');
+                return res.redirect('/admin/map');
             });
 
         });

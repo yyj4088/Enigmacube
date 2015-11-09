@@ -1,3 +1,5 @@
+var dataTableList = {};
+
 $(function () {
     var tables = $('.dataTable');
 
@@ -18,7 +20,10 @@ $(function () {
                 sort.push(options);
             });
 
-            table.DataTable({
+            dataTableList[table.attr('id')] = table.DataTable({
+
+                iDisplayLength: 20,
+                aLengthMenu: [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]],
                 processing: true,
                 serverSide: true,
                 ajax: {

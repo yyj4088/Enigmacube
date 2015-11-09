@@ -11,7 +11,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('stuff/index', {
+        return res.view('stuff/index', {
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
         });
@@ -73,6 +73,10 @@ module.exports = {
 
                 if (rows.length) {
                     rows.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
                             '<a href="/admin/stuff/' + row.id + '">' + row.name + '</a>',
@@ -84,7 +88,7 @@ module.exports = {
                     });
                 }
 
-                res.json({
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
                     recordsTotal: count,
@@ -110,7 +114,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('stuff/form', {
+        return res.view('stuff/form', {
             action: '/admin/stuff',
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
@@ -143,7 +147,10 @@ module.exports = {
                 active: true
             }];
 
-            res.view('stuff/form', {
+            stuff.createdAt = Helper.date(stuff.createdAt);
+            stuff.updatedAt = Helper.date(stuff.updatedAt);
+
+            return res.view('stuff/form', {
                 action: '/admin/stuff/' + stuff.id + '/update',
                 stuff: stuff,
                 breadcrumbs: breadcrumbs,
@@ -163,7 +170,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/stuff');
+            return res.redirect('/admin/stuff');
         })
     },
 
@@ -185,8 +192,8 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/stuff');
-        })
+            return res.redirect('/admin/stuff');
+        });
     },
 
     /**
@@ -213,9 +220,8 @@ module.exports = {
                     return;
                 }
 
-                res.redirect('/admin/stuff');
+                return res.redirect('/admin/stuff');
             });
-
         });
     }
 

@@ -31,6 +31,8 @@ module.exports = {
         req.logout();
         req.session.authenticated = false;
         req.flash('info', 'Vous avez été déconnecté');
+
+        Log.add(user.id, 'passport.logout.success');
         res.redirect(req.query.next);
     },
 
@@ -81,8 +83,18 @@ module.exports = {
                     return tryAgain(err);
                 }
 
-                req.session.authenticated = true;
-                res.redirect(req.query.next || '/');
+                User.update(user.id, {ip: req.ip, headers: req.headers}).exec(function afterwards(err, updated) {
+
+                    if (err) {
+                        Log.add(user.id, 'passport.callback.login.update.error');
+                        return;
+                    }
+
+                    Log.add(user.id, 'passport.callback.login.update.success');
+
+                    req.session.authenticated = true;
+                    res.redirect(req.query.next || '/');
+                });
             });
         });
     },
@@ -90,4 +102,5 @@ module.exports = {
     disconnect: function (req, res) {
         passport.disconnect(req, res);
     }
+
 };

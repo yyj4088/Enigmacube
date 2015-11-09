@@ -1,5 +1,5 @@
 <div class="table-wrapper">
-    <table class="table table-striped table-bordered dataTable" data-url="/admin/map/list" cellspacing="0" width="100%">
+    <table class="table table-striped table-bordered dataTable" data-url="{% if mapsUrl %}{{ mapsUrl }}{% else %}/admin/map/list{% endif %}" cellspacing="0" width="100%" id="listTableMap">
         <thead>
         <tr>
             <th data-sort="yes" width="50" data-class="text-left">ID</th>

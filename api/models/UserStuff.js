@@ -1,6 +1,6 @@
 module.exports = {
 
-    tableName: 'article',
+    tableName: 'user_stuff',
 
     attributes: {
         id: {
@@ -8,12 +8,20 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true
         },
-        title: {
+        user: {
+            model: 'user',
+            required: true
+        },
+        stuff: {
+            model: 'stuff',
+            required: true
+        },
+        name: {
             type: 'string',
             size: 255
         },
-        content: {
-            type: 'text'
+        bullet: {
+            type: 'integer'
         },
         status: {
             type: 'integer'
@@ -29,9 +37,6 @@ module.exports = {
             defaultsTo: function () {
                 return new Date();
             }
-        },
-        zone: {
-            model: 'zone'
         }
     }
 };

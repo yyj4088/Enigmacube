@@ -12,9 +12,28 @@
     <form action="{{ route }}/update" method="post">
         <div class="row">
             <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default btn-block">Annuler</button>
+                        </div>
+                    </div>
+                </div>
                 <div>
-
-                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                    <ul class="nav nav-tabs nav-justified" role="tablist" id="tablistUser">
                         <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profil</a></li>
                         <li role="presentation"><a href="#character" aria-controls="character" role="tab" data-toggle="tab">Personnage</a></li>
                         <li role="presentation"><a href="#stuffs" aria-controls="stuffs" role="tab" data-toggle="tab">Equipements</a></li>
@@ -26,31 +45,77 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="profile">
                             <div class="form-group">
-                                <label for="username">Username</label>
+                                <label for="username">Pseudo</label>
                                 <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="email">Email</label>
+                                <label for="email">E-mail</label>
                                 <input type="text" class="form-control" id="email" name="email" value="{{ user.email }}" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="password">Password</label>
+                                <label for="password">Mot de passe</label>
                                 <input type="password" class="form-control" id="password" name="password">
                             </div>
 
                             <div class="form-group">
-                                <label for="comment">Comment</label>
+                                <label for="comment">Description de l'utilisateur</label>
                                 <textarea class="form-control" id="comment" name="comment" rows="3">{{ user.comment }}</textarea>
                             </div>
 
                             <div class="form-group">
-                                <label for="ip">IP</label>
+                                <label for="ip">IP de connexion</label>
                                 <input type="text" class="form-control" id="ip" name="ip" value="{{ user.ip }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="headers">Header de la connexion</label>
+                                <ul class="list-group">
+                                    {% for key, header in user.headers %}
+                                        <li class="list-group-item">
+                                            <h4 class="list-group-item-heading">{{ key }}</h4>
+
+                                            <p class="list-group-item-text">{{ header }}</p>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="character">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="positionX">Position X</label>
+                                        <input type="text" class="form-control" id="positionX" name="positionX" value="{{ user.x }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="positionY">Position Y</label>
+                                        <input type="text" class="form-control" id="positionY" name="positionY" value="{{ user.y }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="positionZ">Position Z</label>
+                                        <input type="text" class="form-control" id="positionZ" name="positionZ" value="{{ user.z }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="directionX">Direction X</label>
+                                        <input type="text" class="form-control" id="directionX" name="directionX" value="{{ user.directionX }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="directionY">Direction Y</label>
+                                        <input type="text" class="form-control" id="directionY" name="directionY" value="{{ user.directionY }}">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="zone">Relié à la zone</label>
                                 <select class="form-control" id="zone" name="zone">
@@ -63,29 +128,8 @@
                                 </select>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="positionX">X</label>
-                                        <input type="text" class="form-control" id="positionX" name="positionX" value="{{ user.x }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="positionY">Y</label>
-                                        <input type="text" class="form-control" id="positionY" name="positionY" value="{{ user.y }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="positionZ">Z</label>
-                                        <input type="text" class="form-control" id="positionZ" name="positionZ" value="{{ user.z }}" required>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="form-group">
-                                <label for="speed">speed</label>
+                                <label for="speed">Vitesse de déplassement</label>
                                 <select class="form-control" id="speed" name="speed">
                                     {% for i in range(1, 100) %}
                                         <option value="{{ i }}" {% if i == user.speed %}selected="selected"{% endif %}>{{ i }}</option>
@@ -94,7 +138,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="gravity">gravity</label>
+                                <label for="gravity">Force de gravité</label>
                                 <select class="form-control" id="gravity" name="gravity">
                                     {% for i in range(0, 100) %}
                                         <option value="{{ i }}" {% if i == user.gravity %}selected="selected"{% endif %}>{{ i }}</option>
@@ -102,15 +146,10 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="currentDirectionX">currentDirectionX</label>
-                                <input type="text" class="form-control" id="currentDirectionX" name="currentDirectionX" value="{{ user.currentDirectionX }}">
-                            </div>
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="hp">hp</label>
+                                        <label for="hp">HP</label>
                                         <select class="form-control" id="hp" name="hp">
                                             {% for i in range(0, 100) %}
                                                 <option value="{{ i }}" {% if i == user.hp %}selected="selected"{% endif %}>{{ i }}</option>
@@ -120,7 +159,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="hpMax">hpMax</label>
+                                        <label for="hpMax">HP maximum</label>
                                         <select class="form-control" id="hpMax" name="hpMax">
                                             {% for i in range(10, 100) %}
                                                 <option value="{{ i }}" {% if i == user.hpMax %}selected="selected"{% endif %}>{{ i }}</option>
@@ -133,7 +172,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="mp">mp</label>
+                                        <label for="mp">MP</label>
                                         <select class="form-control" id="mp" name="mp">
                                             {% for i in range(0, 100) %}
                                                 <option value="{{ i }}" {% if i == user.mp %}selected="selected"{% endif %}>{{ i }}</option>
@@ -143,7 +182,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="mpMax">mpMax</label>
+                                        <label for="mpMax">MP maximum</label>
                                         <select class="form-control" id="mpMax" name="mpMax">
                                             {% for i in range(10, 100) %}
                                                 <option value="{{ i }}" {% if i == user.mpMax %}selected="selected"{% endif %}>{{ i }}</option>
@@ -156,13 +195,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="xp">xp</label>
+                                        <label for="xp">XP</label>
                                         <input type="number" class="form-control" id="xp" name="xp" value="{{ user.xp }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="level">level</label>
+                                        <label for="level">Niveau</label>
                                         <select class="form-control" id="level" name="level">
                                             {% for i in range(1, 100) %}
                                                 <option value="{{ i }}" {% if i == user.level %}selected="selected"{% endif %}>{{ i }}</option>
@@ -175,13 +214,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="money">money</label>
+                                        <label for="money">Argent en poche</label>
                                         <input type="number" class="form-control" id="money" name="money" value="{{ user.money }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="moneyBank">moneyBank</label>
+                                        <label for="moneyBank">Argent à la banque</label>
                                         <input type="number" class="form-control" id="moneyBank" name="moneyBank" value="{{ user.moneyBank }}" required>
                                     </div>
                                 </div>
@@ -190,7 +229,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="stuff">Stuff</label>
+                                        <label for="stuff">Equipement</label>
                                         <select class="form-control" id="stuff" name="stuff">
                                             <option value="0">Aucun stuff</option>
                                             {% if stuffs %}
@@ -203,7 +242,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="bullet">bullet</label>
+                                        <label for="bullet">Munition(s)</label>
                                         <select class="form-control" id="bullet" name="bullet">
                                             {% for i in range(0, 100) %}
                                                 <option value="{{ i }}" {% if i == user.bullet %}selected="selected"{% endif %}>{{ i }}</option>
@@ -215,64 +254,12 @@
 
                         </div>
                         <div role="tabpanel" class="tab-pane" id="stuffs">
-                            {% set stuffsUrl = '/admin/user/'+user.id+'/stuff' %}
-                            {% include '../stuff/list.html' %}
-                            <div class="panel panel-default">
-                                <div class="panel-heading">Options</div>
-                                <div class="panel-body">
-                                    <p>Ajouter un équipement</p>
-
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="form-group">
-                                                <select class="form-control" id="stuffAdd">
-                                                    <option value="0">Aucun stuff</option>
-                                                    {% if stuffs %}
-                                                        {% for stuff in stuffs %}
-                                                            <option value="{{ stuff.id }}">{{ stuff.name }}</option>
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <button type="button" class="btn btn-primary btn-block" id="addStuff">Ajouter</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% include './stuff.html' %}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="quests">
                             {% set questsUrl = '/admin/user/'+user.id+'/quest' %}
                             {% include '../quest/list.html' %}
-                            <div class="panel panel-default">
-                                <div class="panel-heading">Options</div>
-                                <div class="panel-body">
-                                    <p>Ajouter un équipement</p>
 
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="form-group">
-                                                <select class="form-control" id="questAdd">
-                                                    <option value="0">Aucune quête</option>
-                                                    {% if quests %}
-                                                        {% for quest in quests %}
-                                                            <option value="{{ quest.id }}">{{ quest.title }}</option>
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <button type="button" class="btn btn-primary btn-block" id="addQuest">Ajouter</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="logs">
                             {% set logsUrl = '/admin/user/'+user.id+'/log' %}
@@ -326,20 +313,73 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
+                {% if user.id %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">Ajouter un équipement</div>
+                    <div class="panel-body">
                         <div class="form-group">
-                            <button type="submit" class="btn-lg btn-primary btn-block">Enregistrer</button>
+                            <select class="form-control" id="stuffAdd">
+                                <option value="">Sélectionner un stuff</option>
+                                {% if stuffs %}
+                                    {% for stuff in stuffs %}
+                                        <option value="{{ stuff.id }}">{{ stuff.name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
                         </div>
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="statusStuffAdd">Actif</label>
+                                    <select class="form-control" id="statusStuffAdd">
+                                        <option value="1">Oui</option>
+                                        <option value="0">Non</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="bulletStuffAdd">Quantité</label>
+                                    <select class="form-control" id="lbulletStuffAdd">
+                                        {% for i in range(1, 100) %}
+                                            <option value="{{ i }}">{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="col-md-6">
                         <div class="form-group">
-                            <button type="submit" class="btn-lg btn-danger btn-block">Supprimer</button>
+                            <button type="button" class="btn btn-primary btn-block" data-href="/admin/user/{{ user.id }}/stuff/add" id="stuffButtonAdd">Ajouter</button>
                         </div>
                     </div>
                 </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Ajouter une quête</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <select class="form-control" id="questAdd">
+                                <option value="">Sélectionner une quête</option>
+                                {% if quests %}
+                                    {% for quest in quests %}
+                                        <option value="{{ quest.id }}">{{ quest.title }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary btn-block" data-href="/admin/user/{{ user.id }}/quest/add" id="questButtonAdd">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger btn-block">Supprimer l'utilisateur</button>
+                </div>
             </div>
+            {% endif %}
+        </div>
         </div>
     </form>
 

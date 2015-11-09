@@ -5,7 +5,6 @@ module.exports = {
     attributes: {
         id: {
             type: 'integer',
-            unique: true,
             primaryKey: true,
             autoIncrement: true
         },
@@ -37,10 +36,6 @@ module.exports = {
             defaultsTo: function () {
                 return new Date();
             }
-        },
-        usersStuff: {
-            collection: 'user',
-            via: 'stuffsUser'
         }
     }
 };

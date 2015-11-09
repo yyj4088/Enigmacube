@@ -1,9 +1,13 @@
 module.exports = {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     index: function (req, res) {
-        res.view('dashboard/index', {
-            controller: req.options.controller,
-            alert: req.query.alert
+        return res.view('dashboard/index', {
+            controller: req.options.controller
         });
     }
 };

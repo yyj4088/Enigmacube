@@ -64,11 +64,65 @@ var deleteSkin = function () {
     }
 };
 
+var addStuff = function () {
+    var self = $(this);
+    var url = self.data('href');
+    var stuff = $('#stuffAdd').val();
+    var status = $('#statusStuffAdd').val();
+    var bullet = $('#lbulletStuffAdd').val();
+    if (stuff.length) {
+        $.post(url, {stuff: stuff, status: status, bullet: bullet}, function () {
+            dataTableList.listTableStuff.ajax.reload();
+        });
+    }
+
+    $('#tablistUser a[href="#stuffs"]').tab('show');
+};
+
+var addQuest = function () {
+    var self = $(this);
+    var url = self.data('href');
+    var quest = $('#questAdd').val();
+    if (quest.length) {
+        $.post(url, {quest: quest}, function () {
+            dataTableList.listTableQuest.ajax.reload();
+        });
+    }
+
+    $('#tablistUser a[href="#quests"]').tab('show');
+};
+
+var removeStuff = function () {
+    var self = $(this);
+    var url = self.data('href');
+    var id = self.data('id');
+    if (id) {
+        $.post(url, {stuff: id}, function () {
+            dataTableList.listTableStuff.ajax.reload();
+        });
+    }
+};
+
+var removeQuest = function () {
+    var self = $(this);
+    var url = self.data('href');
+    var id = self.data('id');
+    if (id) {
+        $.post(url, {quest: id}, function () {
+            dataTableList.listTableQuest.ajax.reload();
+        });
+    }
+};
+
 $(function () {
     addAvatar();
     addSkin();
 
     $('body')
+        .on('click', '#questButtonAdd', addQuest)
+        .on('click', '#stuffButtonAdd', addStuff)
+        .on('click', '.js-questButtonRemove', removeQuest)
+        .on('click', '.js-stuffButtonRemove', removeStuff)
         .on('click', '#deleteAvatar', deleteAvatar)
         .on('click', '#deleteSkin', deleteSkin);
 });

@@ -79,6 +79,10 @@ module.exports = {
 
                 if (rows.length) {
                     rows.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
                             '<a href="/admin/user/' + row.id + '">' + row.username + '</a>',
@@ -156,6 +160,9 @@ module.exports = {
                     title: user.name,
                     active: true
                 }];
+
+                user.createdAt = Helper.date(user.createdAt);
+                user.updatedAt = Helper.date(user.updatedAt);
 
                 res.view('user/form', {
                     route: '/admin/user/' + user.id,
@@ -257,6 +264,9 @@ module.exports = {
                     }
 
                     req.flash('info', 'L\'utilisateur a bien été supprimé');
+
+                    Log.add(user.id, 'user.delete.destroy');
+
                     return res.redirect('/admin/user');
                 });
 
@@ -276,13 +286,12 @@ module.exports = {
             start = req.param('start'),
             limit = req.param('limit'),
             options = {
-                sort: {id: 'desc'},
+                user: id,
                 limit: limit,
                 skip: start,
                 or: [
                     {id: {'contains': search.value}},
                     {name: {'contains': search.value}},
-                    {comment: {'contains': search.value}},
                     {createdAt: {'contains': search.value}},
                     {updatedAt: {'contains': search.value}}
                 ]
@@ -297,48 +306,61 @@ module.exports = {
                     options.sort = {name: order[0].dir};
                     break;
                 case '2':
-                    options.sort = {comment: order[0].dir};
+                    options.sort = {status: order[0].dir};
                     break;
                 case '3':
-                    options.sort = {createdAt: order[0].dir};
+                    options.sort = {bullet: order[0].dir};
                     break;
                 case '4':
+                    options.sort = {createdAt: order[0].dir};
+                    break;
+                case '5':
                     options.sort = {updatedAt: order[0].dir};
+                    break;
+                default :
+                    options.sort = {id: 'asc'};
                     break;
             }
         }
 
-        User.findOne(id)
-            .populate('stuffsUser', options)
-            .then(function (user) {
+        UserStuff.find(options)
+            .populate('stuff')
+            .then(function (stuffUser) {
                 delete options.limit;
                 delete options.skip;
-                var count = User.findOne(id).populate('stuffsUser'),
-                    filter = User.findOne(id).populate('stuffsUser', options);
-                return [user, count, filter];
+                var count = UserStuff.find({user: id}),
+                    filter = UserStuff.find(options).populate('stuff');
+                return [stuffUser, count, filter];
             })
-            .spread(function (user, count, filter) {
+            .spread(function (stuffUser, count, filter) {
 
                 var list = [];
 
-                if (user.stuffsUser.length) {
-                    user.stuffsUser.forEach(function (row) {
+                if (stuffUser.length) {
+                    stuffUser.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
-                            '<a href="/admin/stuff/' + row.id + '">' + row.name + '</a>',
-                            row.comment,
+                            '<a href="/admin/stuff/' + row.stuff.id + '">' + row.name + '</a>',
+                            row.status ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' : '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>',
+                            row.bullet,
                             row.createdAt,
                             row.updatedAt,
-                            '<a href="/admin/stuff/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/user/' + row.id + '/stuff/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                            '<a href="/admin/stuff/' + row.stuff.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="javascript:;" class="js-stuffButtonRemove" data-id="' + row.id + '" data-href="/admin/user/' + id + '/stuff/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
                         ]);
                     });
                 }
 
-                res.json({
+                Log.add(user.id, 'user.listStuff.spread');
+
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
-                    recordsTotal: count.stuffsUser.length,
-                    recordsFiltered: filter.stuffsUser.length
+                    recordsTotal: count.length,
+                    recordsFiltered: filter.length
                 });
             })
             .fail(function (err) {
@@ -352,6 +374,33 @@ module.exports = {
      * @param res
      */
     insertStuff: function (req, res) {
+        var id = req.param('id'),
+            stuffId = req.param('stuff'),
+            status = req.param('status'),
+            bullet = req.param('bullet');
+
+        if (!id || !stuffId) {
+            return res.badRequest('No id provided.');
+        }
+
+        Stuff.findOne(stuffId).exec(function editCB(err, stuff) {
+            if (err) {
+                return res.serverError(err);
+            }
+            else if (stuff === undefined) {
+                return res.badRequest('No id provided.');
+            }
+
+            UserStuff.create({user: id, stuff: stuff.id, name: stuff.name, status: status, bullet: bullet}, function createCB(err, userStuff) {
+
+                Log.add(user.id, 'user.insertStuff.create');
+
+                return res.json({
+                    error: err,
+                    stuff: userStuff
+                });
+            });
+        });
     },
 
     /**
@@ -360,6 +409,24 @@ module.exports = {
      * @param res
      */
     deleteStuff: function (req, res) {
+        var id = req.param('id');
+        var stuff = req.param('stuff');
+
+        if (!id || !stuff) return res.badRequest('No id provided.');
+
+        UserStuff.findOne(stuff)
+            .exec(function deleteCB(err, stuffUser) {
+                if (err || !stuffUser) return res.badRequest('No user');
+
+                Log.add(user.id, 'user.deleteStuff.destroy');
+
+                stuffUser.destroy(function (err) {
+                    return res.json({
+                        error: err,
+                        stuff: stuffUser
+                    });
+                });
+            });
     },
 
     /**
@@ -375,16 +442,15 @@ module.exports = {
             start = req.param('start'),
             limit = req.param('limit'),
             options = {
-                sort: {id: 'desc'},
                 limit: limit,
                 skip: start,
                 or: [
                     {id: {'contains': search.value}},
-                    {title: {'contains': search.value}},
-                    {comment: {'contains': search.value}},
                     {createdAt: {'contains': search.value}},
+                    {title: {'contains': search.value}},
                     {updatedAt: {'contains': search.value}}
                 ]
+
             };
 
         if (order[0].column) {
@@ -395,49 +461,55 @@ module.exports = {
                 case '1':
                     options.sort = {title: order[0].dir};
                     break;
-                case '2':
-                    options.sort = {comment: order[0].dir};
-                    break;
                 case '3':
                     options.sort = {createdAt: order[0].dir};
                     break;
                 case '4':
                     options.sort = {updatedAt: order[0].dir};
                     break;
+                default :
+                    options.sort = {id: 'asc'};
+                    break;
             }
         }
 
-        User.findOne(id)
-            .populate('questsUser', options)
-            .then(function (user) {
+        UserQuest.find(options)
+            .populate('quest')
+            .then(function (questUser) {
                 delete options.limit;
                 delete options.skip;
-                var count = User.findOne(id).populate('questsUser'),
-                    filter = User.findOne(id).populate('questsUser', options);
-                return [user, count, filter];
+                var count = UserQuest.find(options),
+                    filter = UserQuest.find(options).populate('quest');
+                return [questUser, count, filter];
             })
-            .spread(function (user, count, filter) {
+            .spread(function (questUser, count, filter) {
 
                 var list = [];
 
-                if (user.questsUser.length) {
-                    user.questsUser.forEach(function (row) {
+                if (questUser.length) {
+                    questUser.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
-                            '<a href="/admin/quest/' + row.id + '">' + row.title + '</a>',
-                            row.comment,
+                            '<a href="/admin/quest/' + row.quest.id + '">' + row.quest.title + '</a>',
+                            row.quest.comment,
                             row.createdAt,
                             row.updatedAt,
-                            '<a href="/admin/quest/' + row.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="/admin/user/' + row.id + '/quest/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
+                            '<a href="/admin/quest/' + row.quest.id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> <a href="javascript:;" class="js-questButtonRemove" data-id="' + row.id + '" data-href="/admin/user/' + id + '/quest/delete"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>'
                         ]);
                     });
                 }
 
-                res.json({
+                Log.add(user.id, 'user.listQuest.spread');
+
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
-                    recordsTotal: count.questsUser.length,
-                    recordsFiltered: filter.questsUser.length
+                    recordsTotal: count.length,
+                    recordsFiltered: filter.length
                 });
             })
             .fail(function (err) {
@@ -451,6 +523,27 @@ module.exports = {
      * @param res
      */
     insertQuest: function (req, res) {
+        var id = req.param('id'),
+            questId = req.param('quest');
+
+        if (!id || !questId) {
+            return res.badRequest('No id provided.');
+        }
+
+        Quest.findOne(questId).exec(function editCB(err, quest) {
+            if (err) {
+                return res.serverError(err);
+            }
+            UserQuest.create({user: id, quest: quest.id, title: quest.title}, function createCB(err, userQuest) {
+
+                Log.add(user.id, 'user.insertQuest.create');
+
+                res.json({
+                    error: err,
+                    quest: userQuest
+                });
+            });
+        });
     },
 
     /**
@@ -459,5 +552,24 @@ module.exports = {
      * @param res
      */
     deleteQuest: function (req, res) {
+        var id = req.param('id');
+        var quest = req.param('quest');
+
+        if (!id || !quest) return res.badRequest('No id provided.');
+
+        UserQuest.findOne(quest)
+            .exec(function deleteCB(err, questUser) {
+                if (err || !questUser) return res.badRequest('No user');
+
+                questUser.destroy(function (err) {
+
+                    Log.add(user.id, 'user.deleteQuest.destroy');
+
+                    return res.json({
+                        error: err,
+                        stuff: questUser
+                    });
+                });
+            });
     }
 };

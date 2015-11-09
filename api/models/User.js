@@ -2,6 +2,11 @@ var User = {
     schema: true,
 
     attributes: {
+        id: {
+            type: 'integer',
+            primaryKey: true,
+            autoIncrement: true
+        },
         username: {
             type: 'string',
             unique: true,
@@ -15,6 +20,9 @@ var User = {
         passports: {
             collection: 'Passport',
             via: 'user'
+        },
+        headers: {
+            type: 'json'
         },
         ip: {
             type: 'string',
@@ -59,7 +67,10 @@ var User = {
         gravity: {
             type: 'float'
         },
-        currentDirectionX: {
+        directionX: {
+            type: 'float'
+        },
+        directionY: {
             type: 'float'
         },
         hp: {
@@ -87,10 +98,7 @@ var User = {
             type: 'integer'
         },
         stuff: {
-            model: 'stuff'
-        },
-        bullet: {
-            type: 'integer'
+            model: 'userStuff'
         },
         zone: {
             model: 'zone',
@@ -107,16 +115,6 @@ var User = {
             defaultsTo: function () {
                 return new Date();
             }
-        },
-        stuffsUser: {
-            collection: 'stuff',
-            via: 'usersStuff',
-            dominant: true
-        },
-        questsUser: {
-            collection: 'quest',
-            via: 'usersQuest',
-            dominant: true
         }
     }
 };

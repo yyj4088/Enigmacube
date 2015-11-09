@@ -1,6 +1,6 @@
 module.exports = {
 
-    tableName: 'article',
+    tableName: 'user_quest',
 
     attributes: {
         id: {
@@ -8,12 +8,17 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true
         },
+        user: {
+            model: 'user',
+            required: true
+        },
+        quest: {
+            model: 'quest',
+            required: true
+        },
         title: {
             type: 'string',
             size: 255
-        },
-        content: {
-            type: 'text'
         },
         status: {
             type: 'integer'
@@ -29,9 +34,6 @@ module.exports = {
             defaultsTo: function () {
                 return new Date();
             }
-        },
-        zone: {
-            model: 'zone'
         }
     }
 };

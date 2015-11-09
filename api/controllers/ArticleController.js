@@ -11,7 +11,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('article/index', {
+        return res.view('article/index', {
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
         });
@@ -73,6 +73,10 @@ module.exports = {
 
                 if (rows.length) {
                     rows.forEach(function (row) {
+
+                        row.createdAt = Helper.date(row.createdAt);
+                        row.updatedAt = Helper.date(row.updatedAt);
+
                         list.push([
                             row.id,
                             '<a href="/admin/article/' + row.id + '">' + row.title + '</a>',
@@ -84,7 +88,7 @@ module.exports = {
                     });
                 }
 
-                res.json({
+                return res.json({
                     draw: req.param('draw'),
                     data: list,
                     recordsTotal: count,
@@ -110,7 +114,7 @@ module.exports = {
             active: true
         }];
 
-        res.view('article/form', {
+        return res.view('article/form', {
             action: '/admin/article',
             breadcrumbs: breadcrumbs,
             controller: req.options.controller
@@ -145,7 +149,10 @@ module.exports = {
                     active: true
                 }];
 
-                res.view('article/form', {
+                article.createdAt = Helper.date(article.createdAt);
+                article.updatedAt = Helper.date(article.updatedAt);
+
+                return res.view('article/form', {
                     action: '/admin/article/' + article.id + '/update',
                     article: article,
                     zones: zones,
@@ -169,7 +176,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/article?alert=insert');
+            return res.redirect('/admin/article?alert=insert');
         });
     },
 
@@ -191,7 +198,7 @@ module.exports = {
                 return res.serverError(err);
             }
 
-            res.redirect('/admin/article?alert=save');
+            return res.redirect('/admin/article?alert=save');
         });
     },
 
@@ -219,7 +226,7 @@ module.exports = {
                     return;
                 }
 
-                res.redirect('/admin/article?alert=delete');
+                return res.redirect('/admin/article?alert=delete');
             });
         });
     }
